@@ -1,0 +1,32 @@
+{
+  "strict": false,
+  "globalstrict": false,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": true,
+  "unused": true,
+  "boss": true,
+  "eqnull": true,
+  "node": true,
+  "es5": true,
+
+  "globals": {
+    "Ember": true,
+    "Em": true,
+    "DS": false,
+    "Ember": true,
+    "FormData": true,
+    "window": true,
+
+    "module": true,
+    "test": true,
+    "ok": true,
+    "equal": true,
+    "deepEqual": true
+  }
+}
