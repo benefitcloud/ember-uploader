@@ -34,5 +34,3 @@ _(Nothing yet)_
 ## License
 Copyright (c) 2013 Joshua Borton
 Licensed under the MIT license.
-
-The structure of this project has been created with the [emberjs-library template](https://github.com/pangratz/grunt-init-emberjs-library) for Grunt.js
