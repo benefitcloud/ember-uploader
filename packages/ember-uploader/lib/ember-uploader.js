@@ -13,17 +13,10 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     settings.url  = url;
     settings.type = 'POST';
     settings.beforeSend = function(jqXHR) {
-      if (!('onprogress' in jqXHR)) {
+      if (!('onprogress' in jqXHR.upload)) {
         return;
       }
-
-      if (jqXHR instanceof window.XMLHttpRequest) {
-        jqXHR.addEventListener('progress', self.didProgress, false);
-      }
-
-      if (jqXHR.upload) {
-        jqXHR.upload.addEventListener('progress', self.didProgress, false);
-      }
+      jqXHR.upload.addEventListener('progress', self.didProgress, false);
     };
 
     data.append('file', get(this, 'file'));

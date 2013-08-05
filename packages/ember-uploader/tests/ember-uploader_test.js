@@ -1,6 +1,14 @@
-module("Ember");
+var Uploader;
 
-test("it is defined and an Ember.Namespace", function() {
-  ok(Ember);
-  ok(Ember.Namespace.detectInstance(Ember));
+module("Ember.Uploader", {
+  setup: function() {
+    Uploader = Ember.Uploader.extend({
+      url: '/test'
+    });
+  }
+});
+
+test("has a url of '/test'", function() {
+  var uploader = Uploader.create();
+  equal(uploader.url, '/test');
 });

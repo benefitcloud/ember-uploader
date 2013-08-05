@@ -1,5 +1,3 @@
-"use strict";
-
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -42,7 +40,12 @@ module.exports = function(grunt) {
       },
     },
     qunit: {
-      files: ['tests/**/*.html']
+      cli: ['tests/**/*.html'],
+      development: {
+        options: {
+          urls: ['http://localhost:8000/tests/runner.html']
+        }
+      }
     },
     jshint: {
       options: {
@@ -59,23 +62,30 @@ module.exports = function(grunt) {
       },
     },
     watch: {
-      gruntfile: {
-        files: '<%= jshint.gruntfile.src %>',
-        tasks: ['jshint:gruntfile']
+      options: {
+        nospawn: true,
       },
-      lib: {
-        files: '<%= jshint.lib.src %>',
-        tasks: ['jshint:lib', 'concat:dist', 'test']
+      code: {
+        files: ['packages/ember-uploader/lib/**/*.js'],
+        tasks: ['jshint', 'concat'],
       },
       test: {
-        files: '<%= jshint.lib.tests %>',
-        tasks: ['jshint:test', 'concat:tests', 'test']
-      },
+        files: ['packages/ember-uploader/tests/**/*.js'],
+        tasks: ['jshint', 'concat', 'qunit:development'],
+      }
     },
     strip: {
       lib: {
         src: 'dist/<%= pkg.name %>.js',
         dest: 'tmp/dist.js'
+      }
+    },
+    connect: {
+      test: {
+        options: {
+          port: 8000,
+          base: '.'
+        }
       }
     }
   });
@@ -87,11 +97,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   // custom tasks
-  grunt.registerTask('hint', ['jshint']);
-  grunt.registerTask('test', ['concat', 'qunit']);
-  grunt.registerTask('default', ['clean', 'jshint', 'concat', 'test', 'strip', 'uglify']);
+  grunt.registerTask('test', ['jshint', 'concat', 'qunit:cli', 'clean']);
+  grunt.registerTask('build', ['clean', 'jshint', 'concat', 'strip', 'uglify']);
+  grunt.registerTask('develop', ['clean', 'jshint', 'concat', 'connect:test', 'watch']);
+  grunt.registerTask('default', ['build']);
 
   grunt.registerMultiTask('strip', "Strip all Ember debug statements", function() {
     // make this configurable or better: create own Grunt.js task for this
