@@ -9,6 +9,8 @@ var get = Ember.get,
     set = Ember.set;
 
 Ember.Uploader = Ember.Object.extend(Ember.Evented, {
+  url: null,
+
   upload: function() {
     var url      = get(this, 'url'),
         data     = new FormData(),
