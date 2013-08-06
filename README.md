@@ -30,6 +30,9 @@ _Also, please don't edit files in the "dist" subdirectory as they are generated 
 ## Release History
 _(Nothing yet)_
 
+## Thank you
+The Ember team, contributors and community for being awesome. Also thank you to projects that helped me with Ember Uploader, [ember-model](http://github.com/ebryn/ember-model) and [component/upload](http://github.com/component/upload).
+
 ## License
 Copyright (c) 2013 Joshua Borton
 Licensed under the MIT license.
