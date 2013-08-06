@@ -103,9 +103,9 @@ module.exports = function(grunt) {
     grunt.file.write('tests/index.html', grunt.template.process(tmpl, renderingContext));
   });
 
-  grunt.registerTask('test', ['clean', 'jshint', 'neuter', 'testrunner', 'server', 'qunit']);
+  grunt.registerTask('test', ['jshint', 'neuter', 'testrunner', 'server', 'qunit']);
   grunt.registerTask('build', ['clean', 'jshint', 'neuter', 'strip', 'uglify']);
-  grunt.registerTask('develop', ['clean', 'jshint', 'neuter', 'testrunner', 'server', 'watch']);
+  grunt.registerTask('develop', ['jshint', 'neuter', 'testrunner', 'server', 'watch']);
   grunt.registerTask('default', ['build']);
 
   grunt.registerMultiTask('strip', "Strip all Ember debug statements", function() {
