@@ -67,7 +67,7 @@ module.exports = function(grunt) {
       },
       test: {
         files: ['packages/ember-uploader/tests/**/*.js'],
-        tasks: ['jshint', 'neuter', 'qunit'],
+        tasks: ['jshint', 'neuter', 'testrunner', 'qunit'],
       }
     },
     strip: {
