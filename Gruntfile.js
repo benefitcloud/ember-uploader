@@ -14,20 +14,14 @@ module.exports = function(grunt) {
     clean: {
       files: ['dist', 'tmp']
     },
-    concat: {
+    neuter: {
       options: {
-        banner: '<%= banner %>',
-        stripBanners: true,
-        separator: ';'
+        filepathTransform: function(filepath) {
+          filepath.replace('ember-uploader', 'ember-uploader/lib');
+          return 'packages/' + filepath.replace('ember-uploader', 'ember-uploader/lib');
+        }
       },
-      dist: {
-        src: ['packages/ember-uploader/lib/<%= pkg.name %>.js', 'packages/ember-uploader/lib/**/*.js'],
-        dest: 'dist/<%= pkg.name %>.js'
-      },
-      tests: {
-        src: ['packages/ember-uploader/tests/<%= pkg.name %>.js', 'packages/ember-uploader/tests/**/*.js'],
-        dest: 'dist/<%= pkg.name %>-tests.js'
-      }
+      'dist/ember-uploader.js': 'packages/ember-uploader/lib/main.js'
     },
     uglify: {
       options: {
@@ -42,9 +36,12 @@ module.exports = function(grunt) {
     qunit: {
       all: {
         options: {
-          urls: ['http://localhost:8000/tests/runner.html']
+          urls: ['http://localhost:8000/tests']
         }
       }
+    },
+    testrunner: {
+      all: ['packages/ember-uploader/tests/**/*_test.js']
     },
     jshint: {
       options: {
@@ -66,11 +63,11 @@ module.exports = function(grunt) {
       },
       code: {
         files: ['packages/ember-uploader/lib/**/*.js'],
-        tasks: ['jshint', 'concat', 'qunit:development'],
+        tasks: ['jshint', 'neuter', 'qunit'],
       },
       test: {
         files: ['packages/ember-uploader/tests/**/*.js'],
-        tasks: ['jshint', 'concat', 'qunit:development'],
+        tasks: ['jshint', 'neuter', 'qunit'],
       }
     },
     strip: {
@@ -83,20 +80,32 @@ module.exports = function(grunt) {
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-neuter');
 
   // custom tasks
   grunt.registerTask('server', 'Start the test web server.', function() {
     grunt.log.writeln('Starting web server on port 8000.');
     require('./tests/server.js').listen(8000);
   });
-  grunt.registerTask('test', ['clean', 'jshint', 'concat', 'server', 'qunit']);
-  grunt.registerTask('build', ['clean', 'jshint', 'concat', 'strip', 'uglify']);
-  grunt.registerTask('develop', ['clean', 'jshint', 'concat', 'server', 'watch']);
+
+  grunt.registerMultiTask('testrunner', 'Creates a test runner file.', function() {
+    var tmpl = grunt.file.read('tests/runner.html.tmpl'),
+        renderingContext = {
+          data: {
+            files: this.filesSrc
+          }
+        };
+
+    grunt.file.write('tests/index.html', grunt.template.process(tmpl, renderingContext));
+  });
+
+  grunt.registerTask('test', ['clean', 'jshint', 'neuter', 'testrunner', 'server', 'qunit']);
+  grunt.registerTask('build', ['clean', 'jshint', 'neuter', 'strip', 'uglify']);
+  grunt.registerTask('develop', ['clean', 'jshint', 'neuter', 'testrunner', 'server', 'watch']);
   grunt.registerTask('default', ['build']);
 
   grunt.registerMultiTask('strip', "Strip all Ember debug statements", function() {

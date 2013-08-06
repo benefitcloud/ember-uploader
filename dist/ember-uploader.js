@@ -1,9 +1,4 @@
-// ==========================================================================
-// Project:   Ember Uploader - v0.1.0
-// Homepage:  https://github.com/benefitcloud/ember-uploader
-// Copyright: ©2013 Joshua Borton
-// Licensed:  MIT
-// ==========================================================================
+(function() {
 
 var get = Ember.get,
     set = Ember.set;
@@ -76,3 +71,6 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     });
   }
 });
+
+
+})();
