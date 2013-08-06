@@ -40,8 +40,7 @@ module.exports = function(grunt) {
       },
     },
     qunit: {
-      cli: ['tests/**/*.html'],
-      development: {
+      all: {
         options: {
           urls: ['http://localhost:8000/tests/runner.html']
         }
@@ -67,7 +66,7 @@ module.exports = function(grunt) {
       },
       code: {
         files: ['packages/ember-uploader/lib/**/*.js'],
-        tasks: ['jshint', 'concat'],
+        tasks: ['jshint', 'concat', 'qunit:development'],
       },
       test: {
         files: ['packages/ember-uploader/tests/**/*.js'],
@@ -89,14 +88,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-connect');
 
   // custom tasks
   grunt.registerTask('server', 'Start the test web server.', function() {
     grunt.log.writeln('Starting web server on port 8000.');
     require('./tests/server.js').listen(8000);
   });
-  grunt.registerTask('test', ['jshint', 'concat', 'qunit:cli', 'clean']);
+  grunt.registerTask('test', ['clean', 'jshint', 'concat', 'server', 'qunit']);
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'strip', 'uglify']);
   grunt.registerTask('develop', ['clean', 'jshint', 'concat', 'server', 'watch']);
   grunt.registerTask('default', ['build']);
