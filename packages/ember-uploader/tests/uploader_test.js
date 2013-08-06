@@ -12,7 +12,7 @@ module("Ember.Uploader", {
     }
 
     Uploader = Ember.Uploader.extend({
-      url: '/test'
+      url: '/test',
     });
   }
 });
