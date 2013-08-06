@@ -30,6 +30,7 @@
   ],
   "devDependencies": {
     "grunt": "~0.4.1",
+    "express": "~3.3.4",
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-qunit": "~0.2.2",
     "grunt-contrib-concat": "~0.1.2",

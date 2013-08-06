@@ -79,14 +79,6 @@ module.exports = function(grunt) {
         src: 'dist/<%= pkg.name %>.js',
         dest: 'tmp/dist.js'
       }
-    },
-    connect: {
-      test: {
-        options: {
-          port: 8000,
-          base: '.'
-        }
-      }
     }
   });
 
@@ -100,9 +92,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
 
   // custom tasks
+  grunt.registerTask('server', 'Start the test web server.', function() {
+    grunt.log.writeln('Starting web server on port 8000.');
+    require('./tests/server.js').listen(8000);
+  });
   grunt.registerTask('test', ['jshint', 'concat', 'qunit:cli', 'clean']);
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'strip', 'uglify']);
-  grunt.registerTask('develop', ['clean', 'jshint', 'concat', 'connect:test', 'watch']);
+  grunt.registerTask('develop', ['clean', 'jshint', 'concat', 'server', 'watch']);
   grunt.registerTask('default', ['build']);
 
   grunt.registerMultiTask('strip', "Strip all Ember debug statements", function() {
