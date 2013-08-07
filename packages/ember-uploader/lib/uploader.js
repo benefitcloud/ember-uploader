@@ -43,14 +43,6 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
 
     set(this, 'isUploading', false);
 
-    // Hack to get around small file progress
-    if (get(this, 'progress') === 0) {
-      this.didProgress({
-        total: file.size,
-        loaded: file.size
-      });
-    }
-
     this.trigger('didUpload', data);
   },
 
@@ -59,19 +51,20 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     this.trigger('progress', e);
   },
 
-  _xhr: function() {
-    var xhr = Ember.$.ajaxSettings.xhr();
-    xhr.upload.onprogress = this.didProgress.bind(this);
-    return xhr;
-  },
-
   ajax: function(url, params, method) {
+    var self = this;
     var settings = {
       url: url,
       type: method || 'POST',
       contentType: false,
       processData: false,
-      xhr: get(this, 'xhr'),
+      xhr: function() {
+        var xhr = Ember.$.ajaxSettings.xhr();
+        xhr.upload.onprogress = function(e) {
+          self.didProgress(e);
+        };
+        return xhr;
+      },
       data: params
     };
 
