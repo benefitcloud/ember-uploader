@@ -18,7 +18,7 @@ app.get('/signed-url', function(req, res) {
   var policy = Buffer(JSON.stringify({
     "expiration": expires,
     "conditions": [
-      {"bucket": "attachments.benefitcloud.com"}, 
+      {"bucket": s3Bucket},
       ["starts-with", "$key", ""],
       {"acl": "private"},
       {"expires": expires},
