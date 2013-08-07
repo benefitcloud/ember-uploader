@@ -9,16 +9,35 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   progress: 0,
 
   upload: function() {
-    var data = new FormData(),
+    var data = this.setupFormData(),
+        url  = get(this, 'url'),
         self = this;
 
     set(this, 'isUploading', true);
 
-    data.append('file', get(this, 'file'));
-
-    return this._ajax(data).then(function(data) {
-      self.didUpload(data);
+    return this.ajax(url, data).then(function(respData) {
+      self.didUpload(respData);
+      return respData;
     });
+  },
+
+  setupFormData: function(obj) {
+    var data = new FormData();
+    var file = get(this, 'file');
+
+    if (typeof obj === 'undefined') {
+      obj = {};
+    }
+
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        data.append(prop, obj[prop]);
+      }
+    }
+
+    data.append('file', file);
+
+    return data;
   },
 
   didUpload: function(data) {
@@ -48,16 +67,20 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     return xhr;
   },
 
-  _ajax: function(data) {
+  ajax: function(url, params, method) {
     var settings = {
-      url: get(this, 'url'),
-      type: 'POST',
+      url: url,
+      type: method || 'POST',
       contentType: false,
       processData: false,
       xhr: get(this, 'xhr'),
-      data: data
+      data: params
     };
 
+    return this._ajax(settings);
+  },
+
+  _ajax: function(settings) {
     return new Ember.RSVP.Promise(function(resolve, reject) {
       settings.success = function(data) {
         Ember.run(null, resolve, data);
@@ -84,9 +107,39 @@ Ember.S3Uploader = Ember.Uploader.extend({
   /**
     Url used to request a signed upload url
 
-    @property signUrl
+    @property url
   */
-  signUrl: null
+  url: '/sign',
+
+  upload: function() {
+    var self = this;
+
+    set(this, 'isUploading', true);
+
+    return this.sign().then(function(json) {
+      var url = "http://" + json.bucket + ".s3.amazonaws.com";
+      var data = self.setupFormData(json);
+
+      return self.ajax(url, data);
+    }).then(function(respData) {
+      self.didUpload(respData);
+      return respData;
+    });
+  },
+
+  sign: function() {
+    var file = get(this, 'file');
+    var settings = {
+      url: get(this, 'url'),
+      type: 'GET',
+      contentType: 'json',
+      data: {
+        name: file.name
+      }
+    };
+
+    return this._ajax(settings);
+  }
 });
 
 

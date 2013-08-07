@@ -7,16 +7,35 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   progress: 0,
 
   upload: function() {
-    var data = new FormData(),
+    var data = this.setupFormData(),
+        url  = get(this, 'url'),
         self = this;
 
     set(this, 'isUploading', true);
 
-    data.append('file', get(this, 'file'));
-
-    return this._ajax(data).then(function(data) {
-      self.didUpload(data);
+    return this.ajax(url, data).then(function(respData) {
+      self.didUpload(respData);
+      return respData;
     });
+  },
+
+  setupFormData: function(obj) {
+    var data = new FormData();
+    var file = get(this, 'file');
+
+    if (typeof obj === 'undefined') {
+      obj = {};
+    }
+
+    for (var prop in obj) {
+      if (obj.hasOwnProperty(prop)) {
+        data.append(prop, obj[prop]);
+      }
+    }
+
+    data.append('file', file);
+
+    return data;
   },
 
   didUpload: function(data) {
@@ -46,16 +65,20 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     return xhr;
   },
 
-  _ajax: function(data) {
+  ajax: function(url, params, method) {
     var settings = {
-      url: get(this, 'url'),
-      type: 'POST',
+      url: url,
+      type: method || 'POST',
       contentType: false,
       processData: false,
       xhr: get(this, 'xhr'),
-      data: data
+      data: params
     };
 
+    return this._ajax(settings);
+  },
+
+  _ajax: function(settings) {
     return new Ember.RSVP.Promise(function(resolve, reject) {
       settings.success = function(data) {
         Ember.run(null, resolve, data);

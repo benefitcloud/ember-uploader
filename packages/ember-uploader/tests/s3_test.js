@@ -11,9 +11,11 @@ module("Ember.S3Uploader", {
       file = builder.getBlob();
     }
 
+    file.mime = 'text/plain';
+    file.name = 'test.txt';
+
     Uploader = Ember.S3Uploader.extend({
-      url: '/S3-URL',
-      signUrl: '/sign-upload'
+      url: '/signed-url'
     });
   }
 });
@@ -22,5 +24,22 @@ test("it has a sign url of '/sign-upload'", function() {
   expect(1);
 
   var uploader = Uploader.create();
-  equal(uploader.signUrl, '/sign-upload');
+  equal(uploader.url, '/signed-url');
+});
+
+test("uploads to s3", function() {
+  expect(1);
+
+  var uploader = Uploader.create({
+    file: file
+  });
+
+  uploader.on('didUpload', function(data) {
+    start();
+    equal(data, '');
+  });
+
+  uploader.upload();
+
+  stop();
 });
