@@ -18,3 +18,5 @@ bower_components
 tmp
 
 tests/index.html
+
+.env
