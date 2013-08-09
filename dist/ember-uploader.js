@@ -5,7 +5,6 @@ var get = Ember.get,
 
 Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   url: null,
-  progress: 0,
 
   upload: function(file) {
     var data = this.setupFormData(file),
@@ -41,7 +40,7 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   },
 
   didProgress: function(e) {
-    set(this, 'progress', e.loaded / e.total * 100);
+    e.percent = e.loaded / e.total * 100;
     this.trigger('progress', e);
   },
 

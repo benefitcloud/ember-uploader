@@ -50,7 +50,7 @@ test("emits progress event", function() {
 
   uploader.on('progress', function(e) {
     start();
-    equal(uploader.progress, 100);
+    equal(e.percent, 100);
   });
 
   uploader.upload(file);
