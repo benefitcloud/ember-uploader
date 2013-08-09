@@ -1,0 +1,11 @@
+---
+language: node_js
+before_script:
+  - npm install
+  - bower install
+script: grunt test
+env:
+  global:
+  - secure: LYh28uXyenIYm1w6UPqXPnIttVWhBFhLJ1ukKdmdH9DKcXqrXXQcy+nbR/v/kjqxFUxd3bs3APzJaVh2lHOXKq1ETASrwW1ry4efg8+6w7ygufvKqWAasvPtYiahfp6drOOVOvj0luzFtbfzF4gZ26H67AShybSKmidzttxP7c0=
+  - secure: W28Da5ynvVk5Su8RpSKr/GiYZa4M70vyZcXoNX/KG5dvpt+Z1mM1lc8hbhIhQPewclzrOrqMCuP7HCoJ5Hj5b/Hu1tXM/oZ1jYzOIatsycL4CpxaxlOIHk999urnrcaHeuto1GMAx7u86fNrdoIfBy24h/x2cbsY44t3zGAI18A=
+  - secure: ATPScDj2RTCaDaj1pRThCCjObx4cqa625b+DIfuJwdoBdPBu7md1Mt7+rCPFBgVqXYNNXAgz2YKBB8CGOQfAEJr1TEXQm00XWs6ZOqLa3aTKHSBjuWDEDFcx7l6pi8rJYoCBs5dd2t9BCiBVkfgxfIlcxX/McfWu/f/AoGV/MrM=
