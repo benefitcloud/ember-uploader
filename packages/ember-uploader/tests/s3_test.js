@@ -39,7 +39,7 @@ test("uploads to s3", function() {
     equal(data, '');
   });
 
-  uploader.upload();
+  uploader.upload(file);
 
   stop();
 });

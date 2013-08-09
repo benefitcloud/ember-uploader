@@ -9,14 +9,14 @@ Ember.S3Uploader = Ember.Uploader.extend({
   */
   url: '/sign',
 
-  upload: function() {
+  upload: function(file) {
     var self = this;
 
     set(this, 'isUploading', true);
 
-    return this.sign().then(function(json) {
+    return this.sign(file).then(function(json) {
       var url = "http://" + json.bucket + ".s3.amazonaws.com";
-      var data = self.setupFormData(json);
+      var data = self.setupFormData(file, json);
 
       return self.ajax(url, data);
     }).then(function(respData) {
@@ -25,8 +25,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
     });
   },
 
-  sign: function() {
-    var file = get(this, 'file');
+  sign: function(file) {
     var settings = {
       url: get(this, 'url'),
       type: 'GET',

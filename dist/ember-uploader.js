@@ -4,12 +4,11 @@ var get = Ember.get,
     set = Ember.set;
 
 Ember.Uploader = Ember.Object.extend(Ember.Evented, {
-  file: null,
   url: null,
   progress: 0,
 
-  upload: function() {
-    var data = this.setupFormData(),
+  upload: function(file) {
+    var data = this.setupFormData(file),
         url  = get(this, 'url'),
         self = this;
 
@@ -21,17 +20,12 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     });
   },
 
-  setupFormData: function(obj) {
+  setupFormData: function(file, extraData) {
     var data = new FormData();
-    var file = get(this, 'file');
 
-    if (typeof obj === 'undefined') {
-      obj = {};
-    }
-
-    for (var prop in obj) {
-      if (obj.hasOwnProperty(prop)) {
-        data.append(prop, obj[prop]);
+    for (var prop in extraData) {
+      if (extraData.hasOwnProperty(prop)) {
+        data.append(prop, extraData[prop]);
       }
     }
 
@@ -41,8 +35,6 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   },
 
   didUpload: function(data) {
-    var file = get(this, 'file');
-
     set(this, 'isUploading', false);
 
     this.trigger('didUpload', data);
@@ -104,14 +96,14 @@ Ember.S3Uploader = Ember.Uploader.extend({
   */
   url: '/sign',
 
-  upload: function() {
+  upload: function(file) {
     var self = this;
 
     set(this, 'isUploading', true);
 
-    return this.sign().then(function(json) {
+    return this.sign(file).then(function(json) {
       var url = "http://" + json.bucket + ".s3.amazonaws.com";
-      var data = self.setupFormData(json);
+      var data = self.setupFormData(file, json);
 
       return self.ajax(url, data);
     }).then(function(respData) {
@@ -120,8 +112,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
     });
   },
 
-  sign: function() {
-    var file = get(this, 'file');
+  sign: function(file) {
     var settings = {
       url: get(this, 'url'),
       type: 'GET',

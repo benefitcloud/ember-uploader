@@ -35,7 +35,7 @@ test("uploads to the given url", function() {
     equal(data, 'OK');
   });
 
-  uploader.upload();
+  uploader.upload(file);
 
   stop();
 });
@@ -53,7 +53,7 @@ test("emits progress event", function() {
     equal(uploader.progress, 100);
   });
 
-  uploader.upload();
+  uploader.upload(file);
 
   stop();
 });
