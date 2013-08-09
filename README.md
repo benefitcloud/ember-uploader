@@ -21,7 +21,7 @@ Lint and test your code using: `grunt test`.
 _Also, please don't edit files in the "dist" subdirectory as they are generated via Grunt. You'll find source code in the "packages/ember-uploader/lib" subdirectory; tests are located in "packages/ember-uploader/tests"!_
 
 ## Thank you
-The Ember team, its contributors and community for being awesome. Also thank you to [Erik Bryn](http://twitter.com/ebryn) and the contributors behind [ember-model](http://github.com/ebryn/ember-model) as well as [TJ Holowaychuk](http://witter.com/tjholowaychuk) for [component/upload](http://github.com/component/upload).
+The Ember team, its contributors and community for being awesome. Also thank you to [Erik Bryn](http://twitter.com/ebryn) and the contributors behind [ember-model](http://github.com/ebryn/ember-model) as well as [TJ Holowaychuk](http://twitter.com/tjholowaychuk) for [component/upload](http://github.com/component/upload).
 
 ## License
 Copyright (c) 2013 Joshua Borton
