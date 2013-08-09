@@ -1,6 +1,6 @@
 {
   "name": "ember-uploader",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "main": "ember-uploader.js",
   "dependencies": {
     "ember": "~1.0.0-rc.6"
