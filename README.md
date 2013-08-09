@@ -1,4 +1,4 @@
-# Ember Uploader [![Build Status](https://circleci.com/gh/benefitcloud/ember-uploader/tree/develop.png?circle-token=84a48a3172209017eb82c0eed802ba5f828b923f)](https://circleci.com/gh/benefitcloud/ember-uploader/tree/develop)
+# Ember Uploader [![Build Status](https://travis-ci.org/benefitcloud/ember-uploader.png?branch=develop)](https://travis-ci.org/benefitcloud/ember-uploader)
 
 Ember.js file uploader
 
