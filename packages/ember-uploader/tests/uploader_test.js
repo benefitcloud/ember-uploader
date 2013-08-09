@@ -12,7 +12,7 @@ module("Ember.Uploader", {
     }
 
     Uploader = Ember.Uploader.extend({
-      url: '/test'
+      url: '/test',
     });
   }
 });
@@ -35,7 +35,7 @@ test("uploads to the given url", function() {
     equal(data, 'OK');
   });
 
-  uploader.upload();
+  uploader.upload(file);
 
   stop();
 });
@@ -50,10 +50,10 @@ test("emits progress event", function() {
 
   uploader.on('progress', function(e) {
     start();
-    equal(uploader.progress, 100);
+    equal(e.percent, 100);
   });
 
-  uploader.upload();
+  uploader.upload(file);
 
   stop();
 });

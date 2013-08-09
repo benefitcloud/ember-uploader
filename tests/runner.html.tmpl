@@ -15,6 +15,9 @@
   <script src="../bower_components/qunit/qunit/qunit.js"></script>
 
   <script src="../dist/ember-uploader.js"></script>
-  <script src="../dist/ember-uploader-tests.js"></script>
+
+  <% _.each(files, function(filepath) { %>
+    <script type="text/javascript" src="../<%= filepath %>"></script>
+  <% }); %>
 </body>
 </html>
