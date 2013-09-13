@@ -3,7 +3,7 @@
   "version": "0.2.4",
   "main": "ember-uploader.js",
   "dependencies": {
-    "ember": "~1.0.0-rc.6"
+    "ember": "~1.0.0"
   },
   "devDependencies": {
     "qunit": "~1.11"
