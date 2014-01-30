@@ -16,6 +16,7 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   upload: function(file) {
     var data = this.setupFormData(file);
     var url  = get(this, 'url');
+    var type = get(this, 'type');
     var self = this;
 
     set(this, 'isUploading', true);
