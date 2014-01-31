@@ -33,7 +33,6 @@ App.FileUploadComponent = Ember.FileField.extend({
     }
   }).observes('files')
 });
-
 ```
 
 Call the component, pass it the url, and thats it!
@@ -42,7 +41,7 @@ Call the component, pass it the url, and thats it!
 ```
 
 #### Ajax request type
-By default request will be sent as `POST`. To override that, just pass the type when creating the object `type`
+By default request will be sent as `POST`. To override that, `type` when creating the object
 
 ```js
 var uploader = Ember.Uploader.create({
@@ -54,9 +53,8 @@ var uploader = Ember.Uploader.create({
 #### Progress
 
 ```js
-var _this = this;
 uploader.on('progress', function(e) {
-  // Add code for handling progress change
+  // Handling progress changes
   // Use `e.percent` to get percentage
 });
 ```
