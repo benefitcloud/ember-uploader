@@ -40,6 +40,16 @@ Call the component, pass it the url, and thats it!
 ```hbs
 {{file-upload url="/upload"}}
 ```
+
+#### Ajax request type
+By default request will be sent as `POST`. To override that, just pass the type when creating the object `type`
+
+```js
+var uploader = Ember.Uploader.create({
+  url: '/upload',
+  type: 'PUT'
+});
+```
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
