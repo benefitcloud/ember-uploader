@@ -12,12 +12,9 @@ Download the [production version][min] or the [development version][max].
 or using bower `bower install ember-uploader --save`
 
 #### Basic Setup
+Create new component and extend `Ember.FileField` provided by ember-uploader. If you're using `Ember.FileField`, it will automatically give you an input field, and will set `files` property when you choose a file.
 
 ```js
-/**
- * Create a `file_upload.js` component and extend `Ember.FileField` provided by ember-uploader
- * If you're using `Ember.FileField`, it will automatically set `files` property when you choose a file.
- */
 App.FileUploadComponent = Ember.FileField.extend({
   url: '',
   filesChange: (function() {
@@ -41,7 +38,7 @@ Call the component, pass it the url, and thats it!
 ```
 
 #### Ajax request type
-By default request will be sent as `POST`. To override that, `type` when creating the object
+By default request will be sent as `POST`. To override that, set `type` when creating the object
 
 ```js
 var uploader = Ember.Uploader.create({
@@ -54,7 +51,7 @@ var uploader = Ember.Uploader.create({
 
 ```js
 uploader.on('progress', function(e) {
-  // Handling progress changes
+  // Handle progress changes
   // Use `e.percent` to get percentage
 });
 ```
@@ -63,7 +60,7 @@ uploader.on('progress', function(e) {
 
 ```js
 uploader.on('didUpload', function(e) {
-  // Handle finished uploads
+  // Handle finished upload
 });
 ```
 
