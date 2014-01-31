@@ -66,6 +66,19 @@ uploader.on('didUpload', function(e) {
   // Handle finished uploads
 });
 ```
+
+#### Response
+Retured value from uploader will be a promise
+
+```js
+promise = uploader.upload(file);
+
+promise.then(function(data) {
+  // Handle success
+}, function(error) {
+  // Handle failure
+});
+```
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
