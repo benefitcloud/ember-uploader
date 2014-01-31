@@ -6,14 +6,22 @@ var get = Ember.get,
 Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   url: null,
 
+  /**
+   * ajax request type (method), by default it will be POST
+   *
+   * @property type
+   */
+  type: 'POST',
+
   upload: function(file) {
     var data = this.setupFormData(file);
     var url  = get(this, 'url');
+    var type = get(this, 'type');
     var self = this;
 
     set(this, 'isUploading', true);
 
-    return this.ajax(url, data).then(function(respData) {
+    return this.ajax(url, data, type).then(function(respData) {
       self.didUpload(respData);
       return respData;
     });
