@@ -3,10 +3,10 @@
   "version": "0.2.5",
   "main": "ember-uploader.js",
   "dependencies": {
-    "ember": "~1.0.0"
+    "ember": ">= 1.2.0"
   },
   "devDependencies": {
-    "qunit": "~1.11"
+    "qunit": "~1.13.0"
   },
   "ignore": [
     "**/.*",
