@@ -22,6 +22,11 @@ test("has a url of '/test'", function() {
   equal(uploader.url, '/test');
 });
 
+test("has an ajax request of type 'PUT'", function() {
+  var uploader = Uploader.create({type: 'PUT'});
+  equal(uploader.type, 'PUT');
+});
+
 test("uploads to the given url", function() {
   expect(1);
 
