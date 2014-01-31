@@ -50,6 +50,16 @@ var uploader = Ember.Uploader.create({
   type: 'PUT'
 });
 ```
+
+#### Progress
+
+```js
+var _this = this;
+uploader.on('progress', function(e) {
+  // Add code for handling progress change
+  // Use `e.percent` to get percentage
+});
+```
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
