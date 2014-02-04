@@ -76,6 +76,26 @@ promise.then(function(data) {
   // Handle failure
 });
 ```
+
+#### Multiple files
+```js
+App.FileUploadComponent = Ember.FileField.extend({
+  multiple: true,
+  url: '',
+
+  filesChange: (function() {
+    var uploadUrl = this.get('url');
+    var files = this.get('files');
+
+    var uploader = Ember.Uploader.create({ url: uploadUrl });
+
+    if (!Ember.isEmpty(files)) {
+      uploader.upload(files);
+    }
+  }).observes('files')
+});
+```
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
