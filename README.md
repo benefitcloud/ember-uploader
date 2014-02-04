@@ -9,6 +9,73 @@ Download the [production version][min] or the [development version][max].
 [min]: https://raw.github.com/benefitcloud/ember-uploader/master/dist/ember-uploader.min.js
 [max]: https://raw.github.com/benefitcloud/ember-uploader/master/dist/ember-uploader.js
 
+or using bower `bower install ember-uploader --save`
+
+#### Basic Setup
+Create new component and extend `Ember.FileField` provided by ember-uploader. If you're using `Ember.FileField`, it will automatically give you an input field, and will set `files` property when you choose a file.
+
+```js
+App.FileUploadComponent = Ember.FileField.extend({
+  url: '',
+  filesChange: (function() {
+    var uploadUrl = this.get('url');
+    var files = this.get('files');
+
+    var uploader = Ember.Uploader.create({
+      url: uploadUrl
+    });
+
+    if (!Ember.isEmpty(files)) {
+      uploader.upload(files[0]);
+    }
+  }).observes('files')
+});
+```
+
+Call the component, pass it the url, and thats it!
+```hbs
+{{file-upload url="/upload"}}
+```
+
+#### Ajax request type
+By default request will be sent as `POST`. To override that, set `type` when creating the object
+
+```js
+var uploader = Ember.Uploader.create({
+  url: '/upload',
+  type: 'PUT'
+});
+```
+
+#### Progress
+
+```js
+uploader.on('progress', function(e) {
+  // Handle progress changes
+  // Use `e.percent` to get percentage
+});
+```
+
+#### Finished Uploading
+
+```js
+uploader.on('didUpload', function(e) {
+  // Handle finished upload
+});
+```
+
+#### Response
+Retured value from uploader will be a promise
+
+```js
+var promise = uploader.upload(file);
+
+promise.then(function(data) {
+  // Handle success
+}, function(error) {
+  // Handle failure
+});
+```
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
