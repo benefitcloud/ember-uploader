@@ -68,7 +68,7 @@ uploader.on('didUpload', function(e) {
 Retured value from uploader will be a promise
 
 ```js
-promise = uploader.upload(file);
+var promise = uploader.upload(file);
 
 promise.then(function(data) {
   // Handle success
