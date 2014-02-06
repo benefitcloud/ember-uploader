@@ -132,5 +132,5 @@ _Also, please don't edit files in the "dist" subdirectory as they are generated 
 The Ember team, its contributors and community for being awesome. Also thank you to [Erik Bryn](http://twitter.com/ebryn) and the contributors behind [ember-model](http://github.com/ebryn/ember-model) as well as [TJ Holowaychuk](http://twitter.com/tjholowaychuk) for [component/upload](http://github.com/component/upload).
 
 ## License
-Copyright (c) 2013 Joshua Borton
+Copyright (c) 2014 Joshua Borton
 Licensed under the MIT license.
