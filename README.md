@@ -47,21 +47,14 @@ var uploader = Ember.Uploader.create({
 });
 ```
 
-#### JSON Root element (Namespace)
+#### Change Namespace
 
 ```js
 var uploader = Uploader.create({
   paramNamespace: 'post'
 });
-```
 
-**Output**
-```json
-{
-  "post": {
-    "file": { }
-  }
-}
+// will be sent as -> post[file]=...
 ```
 
 #### Change Parameters
@@ -71,13 +64,8 @@ By default parameter will be `file`
 var upload = Uploader.create({
   paramName: 'upload'
 });
-```
 
-**Output**
-```json
-{
-  "upload": {}
-}
+// will be sent as -> upload=...
 ```
 
 #### Progress
