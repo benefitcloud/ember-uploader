@@ -63,6 +63,23 @@ var uploader = Uploader.create({
   }
 }
 ```
+
+#### Change Parameters
+By default parameter will be `file`
+
+```js
+var upload = Uploader.create({
+  paramName: 'upload'
+});
+```
+
+**Output**
+```json
+{
+  upload: {}
+}
+```
+
 #### Progress
 
 ```js
