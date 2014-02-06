@@ -58,8 +58,8 @@ var uploader = Uploader.create({
 **Output**
 ```json
 {
-  post: {
-    file: { }
+  "post": {
+    "file": { }
   }
 }
 ```
@@ -76,7 +76,7 @@ var upload = Uploader.create({
 **Output**
 ```json
 {
-  upload: {}
+  "upload": {}
 }
 ```
 
