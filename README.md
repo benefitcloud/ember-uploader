@@ -47,6 +47,27 @@ var uploader = Ember.Uploader.create({
 });
 ```
 
+#### Change Namespace
+
+```js
+var uploader = Uploader.create({
+  paramNamespace: 'post'
+});
+
+// will be sent as -> post[file]=...
+```
+
+#### Change Parameters
+By default parameter will be `file`
+
+```js
+var upload = Uploader.create({
+  paramName: 'upload'
+});
+
+// will be sent as -> upload=...
+```
+
 #### Progress
 
 ```js
@@ -76,6 +97,26 @@ promise.then(function(data) {
   // Handle failure
 });
 ```
+
+#### Multiple files
+```js
+App.FileUploadComponent = Ember.FileField.extend({
+  multiple: true,
+  url: '',
+
+  filesChange: (function() {
+    var uploadUrl = this.get('url');
+    var files = this.get('files');
+
+    var uploader = Ember.Uploader.create({ url: uploadUrl });
+
+    if (!Ember.isEmpty(files)) {
+      uploader.upload(files);
+    }
+  }).observes('files')
+});
+```
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
