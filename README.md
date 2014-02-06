@@ -47,7 +47,7 @@ var uploader = Ember.Uploader.create({
 });
 ```
 
-### JSON Root element (Namespace)
+#### JSON Root element (Namespace)
 
 ```js
 var uploader = Uploader.create({
