@@ -120,11 +120,11 @@ App.FileUploadComponent = Ember.FileField.extend({
 #### Uploading to S3
 
 Uploading to S3 works in similar manner to the default uploader. There is only
-one extra required before uploading.
+one extra step required before uploading.
 
 You'll need to setup your backend to be able to sign the upload request, to be
-able to make an authenticated request to S3. This step is required to avoids
-saving secret tokens on your client side.
+able to make an authenticated request to S3. This step is required to avoid
+saving secret token on your client.
 
 ```js
 App.S3UploadComponent = Ember.FileField.extend({
