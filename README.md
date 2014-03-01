@@ -117,6 +117,44 @@ App.FileUploadComponent = Ember.FileField.extend({
 });
 ```
 
+#### Uploading to S3
+
+Uploading to S3 works in similar manner to the default uploader. There is only
+one extra required before uploading.
+
+You'll need to setup your backend to be able to sign the upload request, to be
+able to make an authenticated request to S3. This step is required to avoids
+saving secret tokens on your client side.
+
+```js
+App.S3UploadComponent = Ember.FileField.extend({
+  didInsertElement: function() {
+    var uploader = Ember.S3Uploader.create({
+      url: this.get('url')
+    });
+
+    uploader.on('didUpload', function(response) {
+      // S3 will return XML with url
+      var uploadedUrl = $(response).find('Location')[0].textContent;
+      uploadedUrl = unescape(uploadedUrl); // => http://yourbucket.s3.amazonaws.com/file.png
+    });
+
+    this.set('uploader', uploader);
+  }
+
+  filesObserver: (function() {
+  var files = this.get('files');
+    if (files && files[0]) {
+      var uploader = this.get('uploader');
+      uploader.upload(file[0]); // Uploader will send a sign request then upload to S3
+    }
+  }).observes('files')
+});
+
+```
+
+For learning how to setup the backend, please check this guide <link-to-guide>
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
 
