@@ -17,7 +17,7 @@ Create new component and extend `Ember.FileField` provided by ember-uploader. If
 ```js
 App.FileUploadComponent = Ember.FileField.extend({
   url: '',
-  filesChange: (function() {
+  filesDidChange: (function() {
     var uploadUrl = this.get('url');
     var files = this.get('files');
 
@@ -104,7 +104,7 @@ App.FileUploadComponent = Ember.FileField.extend({
   multiple: true,
   url: '',
 
-  filesChange: (function() {
+  filesDidChange: (function() {
     var uploadUrl = this.get('url');
     var files = this.get('files');
 
@@ -128,9 +128,14 @@ saving secret tokens on your client side.
 
 ```js
 App.S3UploadComponent = Ember.FileField.extend({
-  didInsertElement: function() {
+  url: ''
+
+  filesDidChange: (function() {
+    var uploadUrl = this.get('url');
+    var files = this.get('files');
+
     var uploader = Ember.S3Uploader.create({
-      url: this.get('url')
+      url: uploadUrl
     });
 
     uploader.on('didUpload', function(response) {
@@ -139,21 +144,15 @@ App.S3UploadComponent = Ember.FileField.extend({
       uploadedUrl = unescape(uploadedUrl); // => http://yourbucket.s3.amazonaws.com/file.png
     });
 
-    this.set('uploader', uploader);
-  }
-
-  filesObserver: (function() {
-  var files = this.get('files');
-    if (files && files[0]) {
-      var uploader = this.get('uploader');
-      uploader.upload(file[0]); // Uploader will send a sign request then upload to S3
+    if (!Ember.isEmpty(files)) {
+      uploader.upload(files[0]); // Uploader will send a sign request then upload to S3
     }
   }).observes('files')
 });
 
 ```
 
-For learning how to setup the backend, please check this guide <link-to-guide>
+For learning how to setup the backend, please check this guide <link-to-guide-in-wiki>
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
