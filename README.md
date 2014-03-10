@@ -152,7 +152,7 @@ App.S3UploadComponent = Ember.FileField.extend({
 
 ```
 
-For learning how to setup the backend, please check this guide <link-to-guide-in-wiki>
+For learning how to setup the backend, check the [wiki](https://github.com/benefitcloud/ember-uploader/wiki/S3-Server-Setup)
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
