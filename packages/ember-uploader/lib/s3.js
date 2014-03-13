@@ -31,7 +31,9 @@ Ember.S3Uploader = Ember.Uploader.extend({
       type: 'GET',
       contentType: 'json',
       data: {
-        name: file.name
+        name: file.name,
+        type: file.type,
+        size: file.size
       }
     };
 
