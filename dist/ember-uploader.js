@@ -15,8 +15,9 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
    */
   type: 'POST',
 
-  upload: function(file) {
-    var data = this.setupFormData(file);
+  upload: function(file, extra) {
+    extra = extra || {};
+    var data = this.setupFormData(file, extra);
     var url  = get(this, 'url');
     var type = get(this, 'type');
     var self = this;
@@ -29,12 +30,12 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     });
   },
 
-  setupFormData: function(file, data) {
+  setupFormData: function(file, extra) {
     var formData = new FormData();
 
-    for (var prop in data) {
-      if (data.hasOwnProperty(prop)) {
-        formData.append(this.toNamespacedParam(prop), data[prop]);
+    for (var prop in extra) {
+      if (extra.hasOwnProperty(prop)) {
+        formData.append(this.toNamespacedParam(prop), extra[prop]);
       }
     }
 
@@ -135,7 +136,9 @@ Ember.S3Uploader = Ember.Uploader.extend({
       type: 'GET',
       contentType: 'json',
       data: {
-        name: file.name
+        name: file.name,
+        type: file.type,
+        size: file.size
       }
     };
 

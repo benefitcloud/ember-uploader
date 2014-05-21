@@ -77,3 +77,20 @@ test("emits progress event", function() {
 
   stop();
 });
+
+test("it can receive extra data", function() {
+  expect(1);
+
+  var data = { test: 'valid' };
+
+  var TestUploader = Uploader.extend({
+    url: '/upload',
+    setupFormData: function(file, extra) {
+      equal(extra, data);
+      return this._super(file, extra);
+    }
+  });
+
+  var uploader = TestUploader.create();
+  uploader.upload(file, data);
+});
