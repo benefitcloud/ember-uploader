@@ -5,6 +5,8 @@ var get = Ember.get,
 
 Ember.Uploader = Ember.Object.extend(Ember.Evented, {
   url: null,
+  paramNamespace: null,
+  paramName: 'file',
 
   /**
    * ajax request type (method), by default it will be POST
@@ -13,8 +15,9 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
    */
   type: 'POST',
 
-  upload: function(file) {
-    var data = this.setupFormData(file);
+  upload: function(file, extra) {
+    extra = extra || {};
+    var data = this.setupFormData(file, extra);
     var url  = get(this, 'url');
     var type = get(this, 'type');
     var self = this;
@@ -27,18 +30,26 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     });
   },
 
-  setupFormData: function(file, extraData) {
-    var data = new FormData();
+  setupFormData: function(file, extra) {
+    var formData = new FormData();
 
-    for (var prop in extraData) {
-      if (extraData.hasOwnProperty(prop)) {
-        data.append(prop, extraData[prop]);
+    for (var prop in extra) {
+      if (extra.hasOwnProperty(prop)) {
+        formData.append(this.toNamespacedParam(prop), extra[prop]);
       }
     }
 
-    data.append('file', file);
+    formData.append(this.toNamespacedParam(this.paramName), file);
 
-    return data;
+    return formData;
+  },
+
+  toNamespacedParam: function(name) {
+    if (this.paramNamespace) {
+      return this.paramNamespace + '[' + name + ']';
+    }
+
+    return name;
   },
 
   didUpload: function(data) {
@@ -125,7 +136,9 @@ Ember.S3Uploader = Ember.Uploader.extend({
       type: 'GET',
       contentType: 'json',
       data: {
-        name: file.name
+        name: file.name,
+        type: file.type,
+        size: file.size
       }
     };
 

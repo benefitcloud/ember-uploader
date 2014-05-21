@@ -12,7 +12,7 @@ module("Ember.Uploader", {
     }
 
     Uploader = Ember.Uploader.extend({
-      url: '/test',
+      url: '/test'
     });
   }
 });
@@ -20,6 +20,21 @@ module("Ember.Uploader", {
 test("has a url of '/test'", function() {
   var uploader = Uploader.create();
   equal(uploader.url, '/test');
+});
+
+test("has a paramName of 'upload'", function() {
+  var uploader = Uploader.create({ paramName: 'upload' });
+  equal(uploader.paramName, 'upload');
+});
+
+test("has a paramNamespace of 'post'", function() {
+  var uploader = Uploader.create({ paramNamespace: 'post' });
+  equal(uploader.paramNamespace, 'post');
+});
+
+test("creates a param namespace", function() {
+  var uploader = Uploader.create({ paramNamespace: 'post' });
+  equal(uploader.toNamespacedParam('upload'), 'post[upload]');
 });
 
 test("has an ajax request of type 'PUT'", function() {
@@ -61,4 +76,21 @@ test("emits progress event", function() {
   uploader.upload(file);
 
   stop();
+});
+
+test("it can receive extra data", function() {
+  expect(1);
+
+  var data = { test: 'valid' };
+
+  var TestUploader = Uploader.extend({
+    url: '/upload',
+    setupFormData: function(file, extra) {
+      equal(extra, data);
+      return this._super(file, extra);
+    }
+  });
+
+  var uploader = TestUploader.create();
+  uploader.upload(file, data);
 });
