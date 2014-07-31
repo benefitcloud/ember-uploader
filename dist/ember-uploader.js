@@ -120,12 +120,13 @@ Ember.S3Uploader = Ember.Uploader.extend({
     set(this, 'isUploading', true);
 
     return this.sign(file, data).then(function(json) {
+      var url = null;
       if (json.region) {
-        var url = "http://s3-" + json.region + ".amazonaws.com/" + json.bucket;
+        url = "http://s3-" + json.region + ".amazonaws.com/" + json.bucket;
         delete json.region;
       }
       else {
-        var url = "http://" + json.bucket + ".s3.amazonaws.com";
+        url = "http://" + json.bucket + ".s3.amazonaws.com";
       }
       var formData = self.setupFormData(file, json);
 
@@ -134,7 +135,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
       self.didUpload(respData);
       return respData;
     });
-  },
+  },  
 
   sign: function(file, data) {
     data = data || {};
