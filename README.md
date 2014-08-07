@@ -1,4 +1,4 @@
-# Ember Uploader [![Build Status](https://travis-ci.org/benefitcloud/ember-uploader.png?branch=develop)](https://travis-ci.org/benefitcloud/ember-uploader)
+# Ember Uploader [![Build Status](https://travis-ci.org/benefitcloud/ember-uploader.svg?branch=master)](https://travis-ci.org/benefitcloud/ember-uploader)
 
 Ember.js file uploader. Works with any browser that supports [FormData](http://caniuse.com/#search=FormData).
 
