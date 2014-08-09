@@ -7,7 +7,7 @@ var http    = require('http'),
 app.use(express.bodyParser());
 app.use(express.static(__dirname + '/..'));
 
-app.get('/signed-url', function(req, res) {
+app.get('/api/signed-url', function(req, res) {
   var s3Bucket = process.env.AWS_BUCKET;
   var s3Id     = process.env.AWS_ACCESS_KEY_ID;
   var s3Secret = process.env.AWS_SECRET;
@@ -46,10 +46,14 @@ app.get('/signed-url', function(req, res) {
   });
 });
 
-app.post('/upload', function(req, res) {
+app.post('/api/upload', function(req, res) {
   var file = req.files.file;
   if (file) return res.send(200);
   res.send(400);
 });
 
-module.exports = http.createServer(app);
+var port = process.env.PORT || 4200;
+
+http.createServer(app).listen(port, function() {
+  console.log('Listening on ' + port);
+});

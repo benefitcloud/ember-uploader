@@ -1,7 +1,9 @@
+import Uploader from 'ember-uploader/uploader';
+
 var get = Ember.get,
     set = Ember.set;
 
-Ember.S3Uploader = Ember.Uploader.extend({
+export default Uploader.extend({
   /**
     Url used to request a signed upload url
 
