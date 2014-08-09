@@ -1,6 +1,7 @@
 {
   "title": "Ember Uploader",
   "name": "ember-uploader",
+  "APIMethod": "stub",
   "description": "Ember.js uploader",
   "version": "0.2.8",
   "homepage": "https://github.com/benefitcloud/ember-uploader",
@@ -36,6 +37,9 @@
     "ember-cli": "0.0.40",
     "ember-publisher": "0.0.7",
     "broccoli-static-compiler": "~0.1.4",
-    "testem": "~0.6.18"
+    "testem": "~0.6.18",
+    "body-parser": "~1.6.2",
+    "glob": "~4.0.5",
+    "express": "~4.8.2"
   }
 }

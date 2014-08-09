@@ -27,19 +27,21 @@ test("it has a sign url of '/api/signed-url'", function() {
   equal(uploader.url, '/api/signed-url');
 });
 
-test("uploads to s3", function() {
-  expect(1);
+// TODO: Reimplement this test without actually using S3
 
-  var uploader = Uploader.create({
-    file: file
-  });
-
-  uploader.on('didUpload', function(data) {
-    start();
-    equal(data, '');
-  });
-
-  uploader.upload(file);
-
-  stop();
-});
+// test("uploads to s3", function() {
+//   expect(1);
+// 
+//   var uploader = Uploader.create({
+//     file: file
+//   });
+// 
+//   uploader.on('didUpload', function(data) {
+//     start();
+//     equal(data, '');
+//   });
+// 
+//   uploader.upload(file);
+// 
+//   stop();
+// });
