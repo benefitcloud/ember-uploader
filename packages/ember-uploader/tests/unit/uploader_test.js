@@ -1,6 +1,6 @@
 var Uploader, file;
 
-module("Ember.Uploader", {
+module("EmberUploader.Uploader", {
   setup: function() {
     if (typeof WebKitBlobBuilder === "undefined") {
       file = new Blob(['test'], { type: 'text/plain' });
@@ -11,7 +11,7 @@ module("Ember.Uploader", {
       file = builder.getBlob();
     }
 
-    Uploader = Ember.Uploader.extend({
+    Uploader = EmberUploader.Uploader.extend({
       url: '/test'
     });
   }
@@ -46,7 +46,7 @@ test("uploads to the given url", function() {
   expect(1);
 
   var uploader = Uploader.create({
-    url: '/upload',
+    url: '/api/upload',
     file: file
   });
 

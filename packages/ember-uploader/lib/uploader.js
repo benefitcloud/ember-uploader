@@ -1,7 +1,7 @@
 var get = Ember.get,
     set = Ember.set;
 
-Ember.Uploader = Ember.Object.extend(Ember.Evented, {
+export default Ember.Object.extend(Ember.Evented, {
   url: null,
   paramNamespace: null,
   paramName: 'file',

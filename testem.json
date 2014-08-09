@@ -1,0 +1,30 @@
+{
+  "test_page": "tests/index.html",
+  "serve_files": [
+    "dist/**/*.js",
+    "tests/**/*"
+  ],
+  "routes": {
+    "/ember-uploader.js": "dist/ember-uploader.js",
+    "/tests/tests.js": "dist/tests.js"
+  },
+  "launch_in_ci": [
+    "PhantomJS",
+    "api-server"
+  ],
+  "launch_in_dev": [
+    "Chrome",
+    "api-server"
+  ],
+  "launchers": {
+    "api-server": {
+      "command": "node tests/server.js"
+    }
+  },
+  "proxies": {
+    "/api": {
+      "port": 4200,
+      "host": "localhost"
+    }
+  }
+}

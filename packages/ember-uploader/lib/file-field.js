@@ -1,6 +1,6 @@
 var set = Ember.set;
 
-Ember.FileField = Ember.TextField.extend({
+export default Ember.TextField.extend({
   type: 'file',
   attributeBindings: ['multiple'],
   multiple: false,
