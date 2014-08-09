@@ -1,11 +1,5 @@
 ---
 language: node_js
 before_script:
-  - npm install grunt-cli bower
-  - bower install
-script: grunt test
-env:
-  global:
-  - secure: FRp5IwDLuFhAmBcndADrrgbQA/z6MyPZ2MZdcsdBq55Akzoxzhvyl6iwCxNhwqAoHOM797nwGHzRgXuMHuCHqkfaRuPUIWb9hxY4SIUMAFXI2aJSEtn3+9teT4TbaDqMvwOpD97KFl3IqyJre9S4aoct6lNA4Nu0tOtaqtzxsDY=
-  - secure: Svk7E6Ar3WoAyY2jm7g7taIWX31VbzzVQHZCictRvSNG2WPQl8j1M0jy2pg/a97H7LBwaFk7CHiDPNSUYywfsd9v/VtRYKW9N3crA3IF/mDRLMeiNszHxank6CPN0N9uXr+l2wHU6LE2h8xRA2+iMcTRPng34D9opnio1myM2VA=
-  - secure: Yg1NHM0KBfawRtR2UQgz/fL6AUYv5FGC1lxV8WcL8EdGKzitLqF6jv9D5ZXYY94UBb7SdrDj2HhhCZBdy2L9lriW5Oi5mE29GIFPyqnA8iF3hAO94idmElIHtknmqbcctS3wZdP5vaZ1q3szbd9B9VWaGx/ji5sj8gZ0kFze6/w=
+  - npm install
+script: ember test

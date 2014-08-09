@@ -17,6 +17,6 @@ node_modules
 bower_components
 tmp
 
-tests/index.html
+dist/tests
 
 .env

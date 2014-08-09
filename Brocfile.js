@@ -55,8 +55,6 @@ var loaderJS = pickFiles('bower_components/loader.js', {
   destDir: '/'
 });
 
-var testFiles = testTree(libFiles, 'ember-uploader');
-
 var namedAMDBuild = concat(libFiles, {
   inputFiles: ['**/*.js'],
   separator: '\n',
@@ -73,40 +71,42 @@ globalBuild = wrap(globalBuild, {
   wrapper: [ "(function(global){\n", "\n global.EmberUploader = requireModule('ember-uploader')['default'];\n })(this);"]
 });
 
-testFiles = concat(testFiles, {
-  inputFiles: ['**/*.js'],
-  separator: '\n',
-  wrapInEval: true,
-  wrapInFunction: true,
-  outputFile: '/tests.js'
-});
+if (env !== 'production') {
+  var testFiles = testTree(libFiles, 'ember-uploader');
 
-var testRunner = pickFiles('tests', {
-  srcDir: '/',
-  inputFiles: [ '**/*' ],
-  destDir: '/'
-});
+  testFiles = concat(testFiles, {
+    inputFiles: ['**/*.js'],
+    separator: '\n',
+    wrapInEval: true,
+    wrapInFunction: true,
+    outputFile: '/tests/tests.js'
+  });
 
-var bower = pickFiles('bower_components', {
-  srcDir: '/',
-  inputFiles: [ '**/*' ],
-  destDir: '/bower_components'
-});
+  var testRunner = pickFiles('tests', {
+    srcDir: '/',
+    inputFiles: [ '**/*' ],
+    destDir: '/tests'
+  });
 
-if (env === 'production') {
-  var minifiedAMD = minify(namedAMDBuild, 'ember-uploader.named-amd');
-  var minifiedGlobals = minify(globalBuild, 'ember-uploader');
-  var trees = merge([
-    minifiedAMD,
-    minifiedGlobals
-  ]);
-} else {
+  var bower = pickFiles('bower_components', {
+    srcDir: '/',
+    inputFiles: [ '**/*' ],
+    destDir: '/tests/bower_components'
+  });
+
   var trees = merge([
     testFiles,
     globalBuild,
     namedAMDBuild,
     testRunner,
     bower
+  ]);
+} else {
+  var minifiedAMD = minify(namedAMDBuild, 'ember-uploader.named-amd');
+  var minifiedGlobals = minify(globalBuild, 'ember-uploader');
+  var trees = merge([
+    minifiedAMD,
+    minifiedGlobals
   ]);
 }
 
