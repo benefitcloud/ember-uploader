@@ -8,6 +8,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
     @property url
   */
   url: '/sign',
+  headers: null,
 
   upload: function(file, data) {
     var self = this;
@@ -40,6 +41,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
 
     var settings = {
       url: get(this, 'url'),
+      headers: get(this, 'headers'),
       type: 'GET',
       contentType: 'json',
       data: data
