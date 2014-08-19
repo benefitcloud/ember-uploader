@@ -113,6 +113,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
     @property url
   */
   url: '/sign',
+  headers: null,
 
   upload: function(file, data) {
     var self = this;
@@ -122,7 +123,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
     return this.sign(file, data).then(function(json) {
       var url = null;
       if (json.region) {
-        url = "http://s3-" + json.region + ".amazonaws.com/" + json.bucket;
+        url = "//s3-" + json.region + ".amazonaws.com/" + json.bucket;
         delete json.region;
       }
       else {
@@ -145,6 +146,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
 
     var settings = {
       url: get(this, 'url'),
+      headers: get(this, 'headers'),
       type: 'GET',
       contentType: 'json',
       data: data
