@@ -13,9 +13,16 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
    */
   type: 'POST',
 
-  upload: function(file, extra) {
+  /**
+   * Start upload of files and extra data
+   *
+   * @param  {object|array} files  One file object or one array of files object
+   * @param  {array} extra
+   * @return {object}       jquery promise from ajax object
+   */
+  upload: function(files, extra) {
     extra = extra || {};
-    var data = this.setupFormData(file, extra);
+    var data = this.setupFormData(files, extra);
     var url  = get(this, 'url');
     var type = get(this, 'type');
     var self = this;
@@ -28,7 +35,7 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     });
   },
 
-  setupFormData: function(file, extra) {
+  setupFormData: function(files, extra) {
     var formData = new FormData();
 
     for (var prop in extra) {
@@ -37,7 +44,15 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
       }
     }
 
-    formData.append(this.toNamespacedParam(this.paramName), file);
+    // if is a array of files ...
+    if (Ember.isArray(files)) {
+      for (var i = files.length - 1; i >= 0; i--) {
+        formData.append(this.toNamespacedParam(this.paramName), files[i]);
+      }
+    } else {
+      // if has only one file object ...
+      formData.append(this.toNamespacedParam(this.paramName), files);
+    }
 
     return formData;
   },
