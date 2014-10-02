@@ -60,6 +60,27 @@ test("uploads to the given url", function() {
   stop();
 });
 
+test("can abort upload", function() {
+  expect(2);
+
+  var uploader = Uploader.create({
+    url: '/upload',
+    file: file
+  });
+
+  var didUpload = false;
+  uploader.on('didUpload', function(data) {
+    // should not run
+    ok(true);
+  });
+
+  uploader.upload(file);
+  uploader.abort();
+
+  ok(!Ember.get(uploader, 'isUploading'));
+  ok(!didUpload);
+});
+
 test("emits progress event", function() {
   expect(1);
 
