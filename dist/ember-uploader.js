@@ -78,6 +78,12 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
     this.trigger('progress', e);
   },
 
+  abort: function() {
+    set(this, 'isUploading', false);
+
+    this.trigger('isAborting');
+  },
+
   ajax: function(url, params, method) {
     var self = this;
     var settings = {
@@ -90,6 +96,7 @@ Ember.Uploader = Ember.Object.extend(Ember.Evented, {
         xhr.upload.onprogress = function(e) {
           self.didProgress(e);
         };
+        self.one('isAborting', function() { xhr.abort(); });
         return xhr;
       },
       data: params
