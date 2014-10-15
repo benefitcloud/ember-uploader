@@ -141,7 +141,7 @@ App.S3UploadComponent = Ember.FileField.extend({
     uploader.on('didUpload', function(response) {
       // S3 will return XML with url
       var uploadedUrl = $(response).find('Location')[0].textContent;
-      uploadedUrl = unescape(uploadedUrl); // => http://yourbucket.s3.amazonaws.com/file.png
+      uploadedUrl = decodeURIComponent(uploadedUrl); // => http://yourbucket.s3.amazonaws.com/file.png
     });
 
     if (!Ember.isEmpty(files)) {
