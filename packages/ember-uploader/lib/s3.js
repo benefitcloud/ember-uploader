@@ -22,7 +22,7 @@ Ember.S3Uploader = Ember.Uploader.extend({
         delete json.region;
       }
       else {
-        url = "http://" + json.bucket + ".s3.amazonaws.com";
+        url = "//" + json.bucket + ".s3.amazonaws.com";
       }
       var formData = self.setupFormData(file, json);
 
