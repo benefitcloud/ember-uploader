@@ -12,16 +12,16 @@ Download the [production version][min] or the [development version][max].
 or using bower `bower install ember-uploader --save`
 
 #### Basic Setup
-Create new component and extend `Ember.FileField` provided by ember-uploader. If you're using `Ember.FileField`, it will automatically give you an input field, and will set `files` property when you choose a file.
+Create new component and extend `EmberUploader.FileField` provided by ember-uploader. If you're using `EmberUploader.FileField`, it will automatically give you an input field, and will set `files` property when you choose a file.
 
 ```js
-App.FileUploadComponent = Ember.FileField.extend({
+App.FileUploadComponent = EmberUploader.FileField.extend({
   url: '',
   filesDidChange: (function() {
     var uploadUrl = this.get('url');
     var files = this.get('files');
 
-    var uploader = Ember.Uploader.create({
+    var uploader = EmberUploader.Uploader.create({
       url: uploadUrl
     });
 
@@ -41,7 +41,7 @@ Call the component, pass it the url, and thats it!
 By default request will be sent as `POST`. To override that, set `type` when creating the object
 
 ```js
-var uploader = Ember.Uploader.create({
+var uploader = EmberUploader.Uploader.create({
   url: '/upload',
   type: 'PUT'
 });
@@ -100,7 +100,7 @@ promise.then(function(data) {
 
 #### Multiple files
 ```js
-App.FileUploadComponent = Ember.FileField.extend({
+App.FileUploadComponent = EmberUploader.FileField.extend({
   multiple: true,
   url: '',
 
@@ -108,7 +108,7 @@ App.FileUploadComponent = Ember.FileField.extend({
     var uploadUrl = this.get('url');
     var files = this.get('files');
 
-    var uploader = Ember.Uploader.create({ url: uploadUrl });
+    var uploader = EmberUploader.Uploader.create({ url: uploadUrl });
 
     if (!Ember.isEmpty(files)) {
       uploader.upload(files);
@@ -127,14 +127,14 @@ able to make an authenticated request to S3. This step is required to avoid
 saving secret token on your client.
 
 ```js
-App.S3UploadComponent = Ember.FileField.extend({
+App.S3UploadComponent = EmberUploader.FileField.extend({
   url: ''
 
   filesDidChange: (function() {
     var uploadUrl = this.get('url');
     var files = this.get('files');
 
-    var uploader = Ember.S3Uploader.create({
+    var uploader = EmberUploader.S3Uploader.create({
       url: uploadUrl
     });
 
