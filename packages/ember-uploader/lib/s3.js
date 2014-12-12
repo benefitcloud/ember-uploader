@@ -11,6 +11,7 @@ export default Uploader.extend({
   */
   url: '/sign',
   headers: null,
+  filePath: null,
 
   upload: function(file, data) {
     var self = this;
@@ -27,9 +28,14 @@ export default Uploader.extend({
         url = "//" + json.bucket + ".s3.amazonaws.com";
       }
       var formData = self.setupFormData(file, json);
+      self.set("filePath", url + "/" + json.key);
 
       return self.ajax(url, formData);
     }).then(function(respData) {
+      if (!respData) {
+        respData = {};
+        respData["filePath"] = self.get("filePath");
+      }
       self.didUpload(respData);
       return respData;
     });
