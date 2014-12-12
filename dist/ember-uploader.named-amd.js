@@ -6,12 +6,11 @@ define("ember-uploader",
     var S3Uploader = __dependency2__["default"];
     var FileField = __dependency3__["default"];
 
-    var EmberUploader = {};
-    EmberUploader.Uploader = Uploader;
-    EmberUploader.S3Uploader = S3Uploader;
-    EmberUploader.FileField = FileField;
-
-    __exports__["default"] = EmberUploader;
+    __exports__["default"] = {
+      Uploader: Uploader,
+      S3Uploader: S3Uploader,
+      FileField: FileField
+    };
   });
 define("ember-uploader/file-field",
   ["exports"],
@@ -48,6 +47,7 @@ define("ember-uploader/s3",
       */
       url: '/sign',
       headers: null,
+      filePath: null,
 
       upload: function(file, data) {
         var self = this;
@@ -64,9 +64,14 @@ define("ember-uploader/s3",
             url = "//" + json.bucket + ".s3.amazonaws.com";
           }
           var formData = self.setupFormData(file, json);
+          self.set("filePath", url + "/" + json.key);
 
           return self.ajax(url, formData);
         }).then(function(respData) {
+          if (!respData) {
+            respData = {};
+            respData["filePath"] = self.get("filePath");
+          }
           self.didUpload(respData);
           return respData;
         });
