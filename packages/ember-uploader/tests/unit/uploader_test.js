@@ -1,4 +1,5 @@
 var Uploader, file;
+var OldFormData;
 
 module("EmberUploader.Uploader", {
   setup: function() {
@@ -14,6 +15,25 @@ module("EmberUploader.Uploader", {
     Uploader = EmberUploader.Uploader.extend({
       url: '/test'
     });
+
+    OldFormData = FormData;
+
+    FormData = function() {};
+
+    FormData.data = {};
+
+    FormData.reset = function() {
+      this.data = {};
+    };
+
+    FormData.prototype.append = function(name, value) {
+      FormData.data[name] = value;
+    };
+  },
+
+  teardown: function() {
+    FormData.reset();
+    FormData = OldFormData;
   }
 });
 
@@ -40,6 +60,16 @@ test("creates a param namespace", function() {
 test("has an ajax request of type 'PUT'", function() {
   var uploader = Uploader.create({type: 'PUT'});
   equal(uploader.type, 'PUT');
+});
+
+test("it can upload multiple files", function() {
+  expect(3);
+
+  var uploader = Uploader.create({ paramName: 'files' });
+  uploader.setupFormData([1,2,3]);
+  equal(FormData.data['files[0]'], 1);
+  equal(FormData.data['files[1]'], 2);
+  equal(FormData.data['files[2]'], 3);
 });
 
 // TODO: Reimplement this test without actually uploading
