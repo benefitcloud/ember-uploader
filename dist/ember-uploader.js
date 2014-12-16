@@ -160,12 +160,17 @@ define("ember-uploader/s3",
       url: '/sign',
       headers: null,
 
+      didSign: function(response) {
+        this.trigger('didSign', response);
+      },
+
       upload: function(file, data) {
         var self = this;
 
         set(this, 'isUploading', true);
 
         return this.sign(file, data).then(function(json) {
+          self.didSign(json);
           var url = null;
           if (json.region) {
             url = "//s3-" + json.region + ".amazonaws.com/" + json.bucket;
