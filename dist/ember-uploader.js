@@ -118,12 +118,11 @@ define("ember-uploader",
     var S3Uploader = __dependency2__["default"];
     var FileField = __dependency3__["default"];
 
-    var EmberUploader = {};
-    EmberUploader.Uploader = Uploader;
-    EmberUploader.S3Uploader = S3Uploader;
-    EmberUploader.FileField = FileField;
-
-    __exports__["default"] = EmberUploader;
+    __exports__["default"] = {
+      Uploader: Uploader,
+      S3Uploader: S3Uploader,
+      FileField: FileField
+    };
   });
 define("ember-uploader/file-field",
   ["exports"],
@@ -254,8 +253,12 @@ define("ember-uploader/uploader",
 
         // if is a array of files ...
         if (Ember.isArray(files)) {
+          var paramName;
+
           for (var i = files.length - 1; i >= 0; i--) {
-            formData.append(this.toNamespacedParam(this.paramName), files[i]);
+            console.log(FormData);
+            paramName = this.toNamespacedParam(this.paramName) + '[' + i + ']';
+            formData.append(paramName , files[i]);
           }
         } else {
           // if has only one file object ...
