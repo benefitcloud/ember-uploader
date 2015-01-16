@@ -5,6 +5,7 @@ export default Ember.Object.extend(Ember.Evented, {
   url: null,
   paramNamespace: null,
   paramName: 'file',
+  isUploading: false,
 
   /**
    * ajax request type (method), by default it will be POST
@@ -32,6 +33,8 @@ export default Ember.Object.extend(Ember.Evented, {
     return this.ajax(url, data, type).then(function(respData) {
       self.didUpload(respData);
       return respData;
+    }, function(jqXHR, textStatus, errorThrown) {
+      self.didError(jqXHR, textStatus, errorThrown);
     });
   },
 
@@ -75,6 +78,11 @@ export default Ember.Object.extend(Ember.Evented, {
     this.trigger('didUpload', data);
   },
 
+  didError: function(jqXHR, textStatus, errorThrown) {
+    set(this, 'isUploading', false);
+    this.trigger('didError', jqXHR, textStatus, errorThrown);
+  }, 
+
   didProgress: function(e) {
     e.percent = e.loaded / e.total * 100;
     this.trigger('progress', e);
@@ -108,6 +116,8 @@ export default Ember.Object.extend(Ember.Evented, {
   },
 
   _ajax: function(settings) {
+    var self = this;
+
     return new Ember.RSVP.Promise(function(resolve, reject) {
       settings.success = function(data) {
         Ember.run(null, resolve, data);

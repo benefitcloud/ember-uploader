@@ -217,6 +217,7 @@ define("ember-uploader/uploader",
       url: null,
       paramNamespace: null,
       paramName: 'file',
+      isUploading: false,
 
       /**
        * ajax request type (method), by default it will be POST
@@ -244,6 +245,8 @@ define("ember-uploader/uploader",
         return this.ajax(url, data, type).then(function(respData) {
           self.didUpload(respData);
           return respData;
+        }, function(jqXHR, textStatus, errorThrown) {
+          self.didError(jqXHR, textStatus, errorThrown);
         });
       },
 
@@ -287,6 +290,11 @@ define("ember-uploader/uploader",
         this.trigger('didUpload', data);
       },
 
+      didError: function(jqXHR, textStatus, errorThrown) {
+        set(this, 'isUploading', false);
+        this.trigger('didError', jqXHR, textStatus, errorThrown);
+      }, 
+
       didProgress: function(e) {
         e.percent = e.loaded / e.total * 100;
         this.trigger('progress', e);
@@ -320,6 +328,8 @@ define("ember-uploader/uploader",
       },
 
       _ajax: function(settings) {
+        var self = this;
+
         return new Ember.RSVP.Promise(function(resolve, reject) {
           settings.success = function(data) {
             Ember.run(null, resolve, data);
