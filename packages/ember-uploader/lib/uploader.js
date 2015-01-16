@@ -52,7 +52,6 @@ export default Ember.Object.extend(Ember.Evented, {
       var paramName;
 
       for (var i = files.length - 1; i >= 0; i--) {
-        console.log(FormData);
         paramName = this.toNamespacedParam(this.paramName) + '[' + i + ']';
         formData.append(paramName , files[i]);
       }
