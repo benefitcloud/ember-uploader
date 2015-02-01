@@ -135,6 +135,7 @@ define("ember-uploader/uploader",
           return respData;
         }, function(jqXHR, textStatus, errorThrown) {
           self.didError(jqXHR, textStatus, errorThrown);
+          throw errorThrown;
         });
       },
 
@@ -180,7 +181,7 @@ define("ember-uploader/uploader",
       didError: function(jqXHR, textStatus, errorThrown) {
         set(this, 'isUploading', false);
         this.trigger('didError', jqXHR, textStatus, errorThrown);
-      }, 
+      },
 
       didProgress: function(e) {
         e.percent = e.loaded / e.total * 100;

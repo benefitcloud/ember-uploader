@@ -29,9 +29,14 @@ module("EmberUploader.Uploader", {
     FormData.prototype.append = function(name, value) {
       FormData.data[name] = value;
     };
+
+    window.server = sinon.fakeServer.create();
+    window.server.autoRespond = true;
   },
 
   teardown: function() {
+    window.server.restore();
+
     FormData.reset();
     FormData = OldFormData;
   }
@@ -72,43 +77,80 @@ test("it can upload multiple files", function() {
   equal(FormData.data['files[2]'], 3);
 });
 
-// TODO: Reimplement this test without actually uploading
+test("uploads to the given url", function() {
+  window.server.respondWith('POST', '/upload', [200, {}, 'OK']);
 
-// test("uploads to the given url", function() {
-//   expect(1);
-// 
-//   var uploader = Uploader.create({
-//     url: '/api/upload',
-//     file: file
-//   });
-// 
-//   uploader.on('didUpload', function(data) {
-//     start();
-//     equal(data, 'OK');
-//   });
-// 
-//   uploader.upload(file);
-// 
-//   stop();
-// });
+  expect(1);
+
+  var uploader = Uploader.create({
+    url: '/upload',
+    file: file
+  });
+
+  uploader.on('didUpload', function(data) {
+    start();
+    equal(data, 'OK');
+  });
+
+  uploader.upload(file);
+
+  stop();
+});
+
+test("uploads promise gets resolved", function() {
+  window.server.respondWith('POST', '/upload', [200, {}, 'OK']);
+
+  expect(1);
+
+  var uploader = Uploader.create({
+    url: '/upload',
+    file: file
+  });
+
+  uploader.upload(file).then(function(data) {
+    start();
+    equal(data, 'OK');
+  });
+
+  stop();
+});
+
+test("uploads promise gets rejected", function() {
+  window.server.respondWith('POST', '/upload', [400, {}, '']);
+
+  expect(1);
+
+  var uploader = Uploader.create({
+    url: '/upload',
+    file: file
+  });
+
+  uploader.upload(file).then(function(data) {
+  }, function(data) {
+    start();
+    ok(true);
+  });
+
+  stop();
+});
 
 // TODO: Reimplement this test without actually uploading
 
 // test("emits progress event", function() {
 //   expect(1);
-// 
+//
 //   var uploader = Uploader.create({
 //     url: '/upload',
 //     file: file
 //   });
-// 
+//
 //   uploader.on('progress', function(e) {
 //     start();
 //     equal(e.percent, 100);
 //   });
-// 
+//
 //   uploader.upload(file);
-// 
+//
 //   stop();
 // });
 
