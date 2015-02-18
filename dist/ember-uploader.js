@@ -245,9 +245,9 @@ define("ember-uploader/uploader",
         return this.ajax(url, data, type).then(function(respData) {
           self.didUpload(respData);
           return respData;
-        }, function(jqXHR, textStatus, errorThrown) {
-          self.didError(jqXHR, textStatus, errorThrown);
-          throw errorThrown;
+        }, function(error) {
+          self.didError(error.jqXHR, error.textStatus, error.errorThrown);
+          throw error;
         });
       },
 
@@ -336,7 +336,11 @@ define("ember-uploader/uploader",
           };
 
           settings.error = function(jqXHR, textStatus, errorThrown) {
-            Ember.run(null, reject, jqXHR);
+            Ember.run(null, reject, {
+              jqXHR: jqXHR,
+              textStatus: textStatus,
+              errorThrown: errorThrown
+            });
           };
 
           Ember.$.ajax(settings);
