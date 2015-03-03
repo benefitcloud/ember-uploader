@@ -134,6 +134,23 @@ test("uploads promise gets rejected", function() {
   stop();
 });
 
+test("error response not undefined", function() {
+  window.server.respondWith('POST', '/upload', [409, {}, '']);
+
+  expect(1);
+
+  var uploader = Uploader.create({
+    url: '/upload'
+  });
+
+  uploader.upload(file).then(null, function(error) {
+    start();
+    equal(error.status, 409);
+  });
+
+  stop();
+});
+
 // TODO: Reimplement this test without actually uploading
 
 // test("emits progress event", function() {

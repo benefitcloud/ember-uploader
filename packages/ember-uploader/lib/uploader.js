@@ -30,13 +30,7 @@ export default Ember.Object.extend(Ember.Evented, {
 
     set(this, 'isUploading', true);
 
-    return this.ajax(url, data, type).then(function(respData) {
-      self.didUpload(respData);
-      return respData;
-    }, function(jqXHR, textStatus, errorThrown) {
-      self.didError(jqXHR, textStatus, errorThrown);
-      throw errorThrown;
-    });
+    return this.ajax(url, data, type);
   },
 
   setupFormData: function(files, extra) {
@@ -74,13 +68,30 @@ export default Ember.Object.extend(Ember.Evented, {
 
   didUpload: function(data) {
     set(this, 'isUploading', false);
-
     this.trigger('didUpload', data);
+    return data;
   },
 
   didError: function(jqXHR, textStatus, errorThrown) {
     set(this, 'isUploading', false);
+
+    // Borrowed from Ember Data
+    var isObject = jqXHR !== null && typeof jqXHR === 'object';
+
+    if (isObject) {
+      jqXHR.then = null;
+      if (!jqXHR.errorThrown) {
+        if (typeof errorThrown === 'string') {
+          jqXHR.errorThrown = new Error(errorThrown);
+        } else {
+          jqXHR.errorThrown = errorThrown;
+        }
+      }
+    }
+
     this.trigger('didError', jqXHR, textStatus, errorThrown);
+
+    return jqXHR;
   },
 
   didProgress: function(e) {
@@ -120,11 +131,11 @@ export default Ember.Object.extend(Ember.Evented, {
 
     return new Ember.RSVP.Promise(function(resolve, reject) {
       settings.success = function(data) {
-        Ember.run(null, resolve, data);
+        Ember.run(null, resolve, self.didUpload(data));
       };
 
-      settings.error = function(jqXHR, textStatus, errorThrown) {
-        Ember.run(null, reject, jqXHR);
+      settings.error = function(jqXHR, responseText, errorThrown) {
+        Ember.run(null, reject, self.didError(jqXHR, responseText, errorThrown));
       };
 
       Ember.$.ajax(settings);

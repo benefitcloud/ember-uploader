@@ -34,11 +34,8 @@ export default Uploader.extend({
       var formData = self.setupFormData(file, json);
 
       return self.ajax(url, formData);
-    }).then(function(respData) {
-      self.didUpload(respData);
-      return respData;
     });
-  },  
+  },
 
   sign: function(file, data) {
     data = data || {};
