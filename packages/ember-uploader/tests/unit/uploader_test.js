@@ -155,6 +155,7 @@ test("uploads promise gets rejected", function() {
 // });
 
 test("it can receive extra data", function() {
+  window.server.respondWith('POST', '/upload', [200, {}, '']);
   expect(1);
 
   var data = { test: 'valid' };
