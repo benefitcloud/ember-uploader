@@ -50,6 +50,7 @@ define("ember-uploader/s3",
 
       didSign: function(response) {
         this.trigger('didSign', response);
+        return response;
       },
 
       upload: function(file, data) {
@@ -58,15 +59,15 @@ define("ember-uploader/s3",
         set(this, 'isUploading', true);
 
         return this.sign(file, data).then(function(json) {
-          self.didSign(json);
-          var url = null;
+          var url;
+
           if (json.region) {
             url = "//s3-" + json.region + ".amazonaws.com/" + json.bucket;
             delete json.region;
-          }
-          else {
+          } else {
             url = "//" + json.bucket + ".s3.amazonaws.com";
           }
+
           var formData = self.setupFormData(file, json);
 
           return self.ajax(url, formData);
@@ -74,6 +75,8 @@ define("ember-uploader/s3",
       },
 
       sign: function(file, data) {
+        var self = this;
+
         data = data || {};
         data.name = file.name;
         data.type = file.type;
@@ -87,7 +90,17 @@ define("ember-uploader/s3",
           data: data
         };
 
-        return this._ajax(settings);
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+          settings.success = function(data) {
+            Ember.run(null, resolve, self.didSign(data));
+          };
+
+          settings.error = function(jqXHR, responseText, errorThrown) {
+            Ember.run(null, reject, self.didError(jqXHR, responseText, errorThrown));
+          };
+
+          Ember.$.ajax(settings);
+        });
       }
     });
   });
