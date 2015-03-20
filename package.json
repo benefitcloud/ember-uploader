@@ -3,7 +3,7 @@
   "name": "ember-uploader",
   "APIMethod": "stub",
   "description": "Ember.js uploader",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "homepage": "https://github.com/benefitcloud/ember-uploader",
   "license": "MIT",
   "namespace": "EmberUploader",
