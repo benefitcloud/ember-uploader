@@ -102,6 +102,7 @@ define("ember-uploader/s3",
         if (s3Port){
           s3Port = ':' + s3Port;
         }
+        delete json.port;
         if (json.region) {
           url = "s3-" + json.region + ".amazonaws.com" + s3Port + "/" + json.bucket;
           delete json.region;
