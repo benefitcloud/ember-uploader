@@ -31,7 +31,9 @@ App.FileUploadComponent = EmberUploader.FileField.extend({
   }).observes('files')
 });
 ```
-For Ember CLI projects create `app/components/file-upload.js` and place into it:
+For Ember CLI projects:
+* `ember generate component file-upload`
+* put into `app/components/file-upload.js` :
 
 ```js
 import Ember from 'ember';
