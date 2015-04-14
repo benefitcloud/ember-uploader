@@ -23,14 +23,7 @@ export default Uploader.extend({
     set(this, 'isUploading', true);
 
     return this.sign(file, data).then(function(json) {
-      var url;
-
-      if (json.region) {
-        url = "//s3-" + json.region + ".amazonaws.com/" + json.bucket;
-        delete json.region;
-      } else {
-        url = "//" + json.bucket + ".s3.amazonaws.com";
-      }
+      var url = "//" + self.buildS3Url(json);
 
       var formData = self.setupFormData(file, json);
 
@@ -65,5 +58,22 @@ export default Uploader.extend({
 
       Ember.$.ajax(settings);
     });
+  },
+
+  buildS3Url: function(json){
+    var url;
+    var s3Port = json.port || '';
+    if (s3Port){
+      s3Port = ':' + s3Port;
+    }
+    delete json.port;
+    if (json.region) {
+      url = "s3-" + json.region + ".amazonaws.com" + s3Port + "/" + json.bucket;
+      delete json.region;
+    } else {
+      url = json.bucket + ".s3.amazonaws.com" + s3Port;
+    }
+
+    return url;
   }
 });

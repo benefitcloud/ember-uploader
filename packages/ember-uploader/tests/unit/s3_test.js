@@ -36,14 +36,17 @@ test("it has a sign url of '/api/signed-url'", function() {
 });
 
 test("it uploads after signing", function() {
-  var responseData = JSON.stringify({ bucket: 'test' });
+  var responseData = JSON.stringify({ port: '4567', bucket: 'test' });
 
-  window.server.respondWith('GET', /^\/sign(.*)$/, [200, {}, responseData]);
+  window.server.respondWith('GET', /^\/sign(.*)$/,
+                            [200, { "Content-Type": "application/json" },
+                             responseData]);
 
-  expect(1);
+  expect(2);
 
   var NewUploader = Uploader.extend({
-    ajax: function() {
+    ajax: function(url) {
+      equal(url, '//test.s3.amazonaws.com:4567');
       start();
       ok(true);
     }
@@ -56,21 +59,38 @@ test("it uploads after signing", function() {
   stop();
 });
 
+test("it builds s3 url", function() {
+  var uploader = Uploader.extend({}).create();
+  var url;
+
+  url = uploader.buildS3Url({port: '4567', bucket: 'test', region: 'us-west-1'});
+  equal(url, "s3-us-west-1.amazonaws.com:4567/test");
+
+  url = uploader.buildS3Url({port: '4567', bucket: 'test'});
+  equal(url, "test.s3.amazonaws.com:4567");
+
+  url = uploader.buildS3Url({bucket: 'test'});
+  equal(url, "test.s3.amazonaws.com");
+
+  url = uploader.buildS3Url({bucket: 'test', region: 'us-west-1'});
+  equal(url, "s3-us-west-1.amazonaws.com/test");
+});
+
 // TODO: Reimplement this test without actually using S3
 
 // test("uploads to s3", function() {
 //   expect(1);
-// 
+//
 //   var uploader = Uploader.create({
 //     file: file
 //   });
-// 
+//
 //   uploader.on('didUpload', function(data) {
 //     start();
 //     equal(data, '');
 //   });
-// 
+//
 //   uploader.upload(file);
-// 
+//
 //   stop();
 // });
