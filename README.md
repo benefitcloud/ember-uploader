@@ -152,7 +152,7 @@ saving secret token on your client.
 
 ```js
 App.S3UploadComponent = EmberUploader.FileField.extend({
-  url: ''
+  url: '',
 
   filesDidChange: (function() {
     var uploadUrl = this.get('url');
