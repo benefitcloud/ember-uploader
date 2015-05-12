@@ -25,7 +25,10 @@ export default Uploader.extend({
     return this.sign(file, data).then(function(json) {
       var url;
 
-      if (json.region) {
+      if (json.endpoint) {
+        url = json.endpoint;
+        delete json.endpoint;
+      } else if (json.region) {
         url = "//s3-" + json.region + ".amazonaws.com/" + json.bucket;
         delete json.region;
       } else {
