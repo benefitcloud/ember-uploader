@@ -56,6 +56,27 @@ test("it uploads after signing", function() {
   stop();
 });
 
+test("it can override the name of the file being uploaded", function() {
+  expect(1);
+
+  var uploader = Uploader.create({
+    // Filename Override
+    fileName: function(name, ext) {
+      return name + '-cust-filename' + ext;
+    },
+  });
+
+  equal(uploader.generateFileName('file.mp4'), 'file-cust-filename.mp4');
+});
+
+test("it takes the filename as given if no override exists", function() {
+  expect(1);
+
+  var uploader = Uploader.create();
+
+  equal(uploader.generateFileName('file.mp4'), 'file.mp4');
+});
+
 // TODO: Reimplement this test without actually using S3
 
 // test("uploads to s3", function() {

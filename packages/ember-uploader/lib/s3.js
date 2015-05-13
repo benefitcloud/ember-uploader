@@ -42,7 +42,7 @@ export default Uploader.extend({
     var self = this;
 
     data = data || {};
-    data.name = file.name;
+    data.name = this.generateFileName(file.name);
     data.type = file.type;
     data.size = file.size;
 
@@ -65,5 +65,21 @@ export default Uploader.extend({
 
       Ember.$.ajax(settings);
     });
+  },
+
+  generateFileName: function(fullName) {
+    // Default return value
+    var ret = fullName;
+
+    // Only customize name if our override function exists
+    if(typeof this.fileName === 'function') {
+      var extension = '.' + fullName.split('.').pop(),
+          name      = fullName.substr(0, fullName.lastIndexOf('.'));
+
+      ret = this.fileName(name, extension);
+    }
+
+    // Return processed name
+    return ret;
   }
 });
