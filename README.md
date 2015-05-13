@@ -152,7 +152,7 @@ saving secret token on your client.
 
 ```js
 App.S3UploadComponent = EmberUploader.FileField.extend({
-  url: ''
+  url: '',
 
   filesDidChange: (function() {
     var uploadUrl = this.get('url');
@@ -177,6 +177,32 @@ App.S3UploadComponent = EmberUploader.FileField.extend({
 ```
 
 For learning how to setup the backend, check the [wiki](https://github.com/benefitcloud/ember-uploader/wiki/S3-Server-Setup)
+
+#### Naming file uploads to S3
+You can easily set the name of a user uploaded file going directly to s3 by defining a fileName function when you create your S3Uploader instance.
+
+```js
+import Ember from 'ember';
+import EmberUploader from 'ember-uploader';
+
+export default EmberUploader.FileField.extend({
+  ...
+  
+  filesDidChange: (function() {
+    ...
+
+    var uploader = EmberUploader.S3Uploader.create({
+      // Add a timestamp to the filename
+      fileName: function(name, ext) {
+        return name + "-" + new Date().getTime() + ext;
+      }
+    });
+    
+    ...
+  }).observes('files')
+});
+
+```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality.
