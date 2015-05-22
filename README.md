@@ -109,6 +109,14 @@ uploader.on('didUpload', function(e) {
 });
 ```
 
+#### Failed Uploading
+
+```js
+uploader.on('didError', function(jqXHR, textStatus, errorThrown) {
+  // Handle unsuccessful upload
+});
+```
+
 #### Response
 Returned value from uploader will be a promise
 
