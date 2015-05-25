@@ -11,6 +11,8 @@ Download the [production version][min] or the [development version][max].
 
 or using bower `bower install ember-uploader --save`
 
+For Ember CLI applications please use [ember-cli-uploader](https://github.com/benefitcloud/ember-cli-uploader).
+
 #### Basic Setup
 Create new component and extend `EmberUploader.FileField` provided by ember-uploader. If you're using `EmberUploader.FileField`, it will automatically give you an input field, and will set `files` property when you choose a file.
 
