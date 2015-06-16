@@ -34,7 +34,7 @@
     "broccoli": "~0.12.3",
     "broccoli-cli": "0.0.1",
     "bower": "~1.3.9",
-    "ember-cli": "0.0.40",
+    "ember-cli": "0.2.7",
     "ember-publisher": "0.0.7",
     "broccoli-static-compiler": "~0.1.4",
     "testem": "~0.6.18",
