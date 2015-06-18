@@ -56,6 +56,22 @@ test("it uploads after signing", function() {
   stop();
 });
 
+test("it has default sign request type as 'GET'", function() {
+  expect(1);
+
+  var uploader = Uploader.create();
+  equal(uploader.get('signRequestType'), 'GET');
+});
+
+test("sign request type can be customized", function() {
+  expect(1);
+
+  var uploader = Uploader.create({
+    signRequestType: 'POST'
+  });
+  equal(uploader.get('signRequestType'), 'POST');
+});
+
 // TODO: Reimplement this test without actually using S3
 
 // test("uploads to s3", function() {
