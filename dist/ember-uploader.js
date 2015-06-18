@@ -159,6 +159,7 @@ define("ember-uploader/s3",
       */
       url: '/sign',
       headers: null,
+      signRequestType: 'GET',
 
       didSign: function(response) {
         this.trigger('didSign', response);
@@ -197,11 +198,17 @@ define("ember-uploader/s3",
         data.type = file.type;
         data.size = file.size;
 
+        var signRequestType = this.get('signRequestType');
+        if (signRequestType !== 'GET') {
+          data = JSON.stringify(data);
+        }
+
         var settings = {
           url: get(this, 'url'),
           headers: get(this, 'headers'),
-          type: 'GET',
-          contentType: 'json',
+          type: signRequestType,
+          contentType: 'application/json',
+          dataType: 'json',
           data: data
         };
 
