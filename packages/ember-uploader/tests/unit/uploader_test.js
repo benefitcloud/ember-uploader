@@ -188,3 +188,21 @@ test("it can receive extra data", function() {
   var uploader = TestUploader.create();
   uploader.upload(file, data);
 });
+
+test("it allows overriding ajax settings", function() {
+  expect(2);
+  var TestUploader = Uploader.extend({
+    ajaxSettings: function() {
+      var settings = this._super.apply(this, arguments);
+      settings.headers = {
+        'Content-Type': 'text/html'
+      }
+      return settings;
+    }
+  });
+
+  var uploader = TestUploader.create();
+  var settings = uploader.ajaxSettings('/test', {});
+  equal(settings.headers['Content-Type'], 'text/html');
+  equal(settings.url, '/test');
+});

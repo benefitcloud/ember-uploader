@@ -90,3 +90,33 @@ test("sign request type can be customized", function() {
 // 
 //   stop();
 // });
+test("it allows overriding sign headers", function() {
+  expect(1);
+  var TestUploader = Uploader.extend({
+    headers: {
+      'Content-Type': 'text/html'
+    }
+  });
+
+  var uploader = TestUploader.create();
+  var settings = uploader.ajaxSignSettings('/test', {});
+  equal(settings.headers['Content-Type'], 'text/html');
+});
+
+test("it allows overriding ajax sign settings", function() {
+  expect(2);
+  var TestUploader = Uploader.extend({
+    ajaxSignSettings: function() {
+      var settings = this._super.apply(this, arguments);
+      settings.headers = {
+        'Content-Type': 'text/html'
+      }
+      return settings;
+    }
+  });
+
+  var uploader = TestUploader.create();
+  var settings = uploader.ajaxSignSettings('/test', {});
+  equal(settings.headers['Content-Type'], 'text/html');
+  equal(settings.url, '/test');
+});

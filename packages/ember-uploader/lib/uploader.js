@@ -105,9 +105,9 @@ export default Ember.Object.extend(Ember.Evented, {
     this.trigger('isAborting');
   },
 
-  ajax: function(url, params, method) {
+  ajaxSettings: function(url, params, method) {
     var self = this;
-    var settings = {
+    return {
       url: url,
       type: method || 'POST',
       contentType: false,
@@ -122,8 +122,10 @@ export default Ember.Object.extend(Ember.Evented, {
       },
       data: params
     };
+  },
 
-    return this._ajax(settings);
+  ajax: function(url, params, method) {
+    return this._ajax(this.ajaxSettings(url, params, method));
   },
 
   _ajax: function(settings) {
