@@ -74,7 +74,7 @@ var uploader = EmberUploader.Uploader.create({
 #### Change Namespace
 
 ```js
-var uploader = Uploader.create({
+var uploader = EmberUploader.Uploader.create({
   paramNamespace: 'post'
 });
 
@@ -85,7 +85,7 @@ var uploader = Uploader.create({
 By default parameter will be `file`
 
 ```js
-var upload = Uploader.create({
+var upload = EmberUploader.Uploader.create({
   paramName: 'upload'
 });
 
