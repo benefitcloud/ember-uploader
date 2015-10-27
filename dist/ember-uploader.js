@@ -147,7 +147,10 @@ define("ember-uploader/file-field",
       _deprecateFileObserver: on('init', function() {
         var hasFilesObserver = this.hasObserverFor('files');
 
-        deprecate('Observing the `files` attr is deprecated, use `filesDidChange` instead.', !hasFilesObserver);
+        deprecate('Observing the `files` attr is deprecated, use `filesDidChange` instead.', !hasFilesObserver, {
+          id: 'ember-uploader.files-attr',
+          until: '1.0'
+        });
       })
     });
   });
@@ -251,7 +254,10 @@ define("ember-uploader/s3",
 
       _deprecateHeadersProperty: on('init', function() {
         if (this.get('headers')) {
-          deprecate('Using the `headers` property is deprecated, override `ajaxSignSettings` or `ajaxSettings` instead');
+          deprecate('Using the `headers` property is deprecated, override `ajaxSignSettings` or `ajaxSettings` instead', {
+            id: 'ember-uploader.s3.headers',
+            until: '1.0'
+          });
         }
       })
     });
