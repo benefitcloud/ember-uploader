@@ -17,6 +17,9 @@ export default Ember.TextField.extend(Ember.Evented, {
   _deprecateFileObserver: on('init', function() {
     var hasFilesObserver = this.hasObserverFor('files');
 
-    deprecate('Observing the `files` attr is deprecated, use `filesDidChange` instead.', !hasFilesObserver);
+    deprecate('Observing the `files` attr is deprecated, use `filesDidChange` instead.', !hasFilesObserver, {
+      id: 'ember-uploader.files-attr',
+      until: '1.0'
+    });
   })
 });
