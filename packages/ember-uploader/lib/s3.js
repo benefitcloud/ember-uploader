@@ -43,7 +43,7 @@ export default Uploader.extend({
         url = "//s3-" + json.region + ".amazonaws.com/" + json.bucket;
         delete json.region;
       } else {
-        url = "//" + json.bucket + ".s3.amazonaws.com";
+        url = "//" + ".s3.amazonaws.com/" + json.bucket;
       }
 
       var formData = self.setupFormData(file, json);
