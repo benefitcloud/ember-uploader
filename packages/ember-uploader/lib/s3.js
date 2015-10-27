@@ -94,7 +94,10 @@ export default Uploader.extend({
 
   _deprecateHeadersProperty: on('init', function() {
     if (this.get('headers')) {
-      deprecate('Using the `headers` property is deprecated, override `ajaxSignSettings` or `ajaxSettings` instead');
+      deprecate('Using the `headers` property is deprecated, override `ajaxSignSettings` or `ajaxSettings` instead', {
+        id: 'ember-uploader.s3.headers',
+        until: '1.0'
+      });
     }
   })
 });
