@@ -71,6 +71,22 @@ var uploader = EmberUploader.Uploader.create({
 });
 ```
 
+#### HTTP header customization
+The example below shows how to set `Accept`/`Authorization` header.
+
+```js
+accessToken: computed.oneWay('authManager.authData.accessToken'),
+
+var uploader = EmberUploader.Uploader.create({
+  url: '/upload',
+  type: 'PUT',
+  headers: {
+            'Accept' : 'application/json', 
+            'Authorization': `Bearer ${get(this, 'accessToken')}`
+           };
+});
+```
+
 #### Change Namespace
 
 ```js

@@ -26,11 +26,12 @@ export default Ember.Object.extend(Ember.Evented, {
     var data = this.setupFormData(files, extra);
     var url  = get(this, 'url');
     var type = get(this, 'type');
+    var headers = get(this, 'headers');
     var self = this;
 
     set(this, 'isUploading', true);
 
-    return this.ajax(url, data, type);
+    return this.ajax(url, data, type, headers);
   },
 
   setupFormData: function(files, extra) {
@@ -105,7 +106,7 @@ export default Ember.Object.extend(Ember.Evented, {
     this.trigger('isAborting');
   },
 
-  ajaxSettings: function(url, params, method) {
+  ajaxSettings: function(url, params, method, headers) {
     var self = this;
     return {
       url: url,
@@ -120,12 +121,13 @@ export default Ember.Object.extend(Ember.Evented, {
         self.one('isAborting', function() { xhr.abort(); });
         return xhr;
       },
+      headers: headers,
       data: params
     };
   },
 
-  ajax: function(url, params, method) {
-    return this._ajax(this.ajaxSettings(url, params, method));
+  ajax: function(url, params, method, headers) {
+    return this._ajax(this.ajaxSettings(url, params, method, headers));
   },
 
   _ajax: function(settings) {
