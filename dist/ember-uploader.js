@@ -11,17 +11,17 @@ var define, requireModule, require, requirejs;
   } else {
     _isArray = Array.isArray;
   }
-  
+
   var registry = {}, seen = {}, state = {};
   var FAILED = false;
 
   define = function(name, deps, callback) {
-  
+
     if (!_isArray(deps)) {
       callback = deps;
       deps     =  [];
     }
-  
+
     registry[name] = {
       deps: deps,
       callback: callback
@@ -139,6 +139,7 @@ define("ember-uploader/file-field",
       change: function(e) {
         var input = e.target;
         if (!Ember.isEmpty(input.files)) {
+          this.set('value', undefined);          
           this.trigger('filesDidChange', input.files);
           set(this, 'files', input.files); // to be removed in future release, needed for `files` observer to continue working
         }
