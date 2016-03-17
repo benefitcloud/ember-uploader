@@ -27,6 +27,7 @@ define("ember-uploader/file-field",
       change: function(e) {
         var input = e.target;
         if (!Ember.isEmpty(input.files)) {
+          this.set('value', undefined);
           this.trigger('filesDidChange', input.files);
           set(this, 'files', input.files); // to be removed in future release, needed for `files` observer to continue working
         }
