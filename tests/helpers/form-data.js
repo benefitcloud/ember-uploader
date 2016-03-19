@@ -17,7 +17,21 @@ TestableFormData.remove = function() {
 }
 
 TestableFormData.prototype.append = function(key, value) {
-  this.data[key] = value;
+  // FormData expects the key for arrays to be postfixed with empty brackets
+  // This same key is used each time a new item is added.
+  let matches = key.match(/^(.*)\[\]$/);
+
+  if (matches) {
+    const arrayKey = matches.reverse()[0];
+
+    if (!Ember.isArray(this.data[arrayKey])) {
+      this.data[arrayKey] = [];
+    }
+
+    this.data[arrayKey].push(value);
+  } else {
+    this.data[key] = value;
+  }
 }
 
 export default TestableFormData;

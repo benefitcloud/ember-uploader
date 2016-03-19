@@ -72,9 +72,9 @@ test("it can upload multiple files", function() {
   }).create();
 
   let formData = uploader.createFormData([1,2,3]);
-  equal(formData.data['files[][0]'], 1);
-  equal(formData.data['files[][1]'], 2);
-  equal(formData.data['files[][2]'], 3);
+  equal(formData.data['files'][0], 1);
+  equal(formData.data['files'][1], 2);
+  equal(formData.data['files'][2], 3);
 });
 
 test("uploads to the given url", function() {

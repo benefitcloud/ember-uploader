@@ -89,8 +89,12 @@ export default Ember.Object.extend(Ember.Evented, {
 
     // if is a array of files ...
     if (isArray(files)) {
+      const paramKey = `${this.toNamespacedParam(this.paramName)}[]`;
+
       for (let i = 0; i < files.length; i++) {
-        formData.append(`${this.toNamespacedParam(this.paramName)}[]`, files[i]);
+        // FormData expects the key for arrays to be postfixed with empty
+        // brackets This same key is used each time a new item is added.
+        formData.append(paramKey, files[i]);
       }
     } else {
       // if has only one file object ...
