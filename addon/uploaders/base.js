@@ -50,7 +50,7 @@ export default Ember.Object.extend(Ember.Evented, {
    *
    * @property ajaxSettings
    */
-  ajaxSettings: null,
+  ajaxSettings: {},
 
   /**
    * Start upload of file(s) and any extra data
