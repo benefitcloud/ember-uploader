@@ -21,11 +21,8 @@
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.2.0",
-    "broccoli-file-creator": "^1.0.1",
-    "broccoli-merge-trees": "^1.0.0",
     "ember-cli": "1.13.13",
     "ember-cli-app-version": "^1.0.0",
-    "ember-cli-babel": "^5.1.6",
     "ember-cli-content-security-policy": "0.4.0",
     "ember-cli-dependency-checker": "^1.1.0",
     "ember-cli-eslint": "1.2.1",
@@ -59,7 +56,9 @@
     "uploader"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.5"
+    "ember-cli-babel": "^5.1.5",
+    "broccoli-file-creator": "^1.0.1",
+    "broccoli-merge-trees": "^1.0.0"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
