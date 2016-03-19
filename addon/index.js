@@ -17,6 +17,10 @@ import { Uploader, S3Uploader } from 'ember-uploader/uploaders';
 EmberUploader.Uploader   = Uploader;
 EmberUploader.S3Uploader = S3Uploader;
 
+import { FileField } from 'ember-uploader/components';
+
+EmberUploader.FileField = FileField;
+
 Ember.lookup.EmberUploader = EmberUploader;
 
 export default EmberUploader;
