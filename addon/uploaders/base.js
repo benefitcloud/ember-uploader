@@ -89,11 +89,8 @@ export default Ember.Object.extend(Ember.Evented, {
 
     // if is a array of files ...
     if (isArray(files)) {
-      let paramName;
-
-      for (let i = files.length - 1; i >= 0; i--) {
-        paramName = `${this.toNamespacedParam(this.paramName)}[][${i}]`;
-        formData.append(paramName, files[i]);
+      for (let i = 0; i < files.length; i++) {
+        formData.append(`${this.toNamespacedParam(this.paramName)}[]`, files[i]);
       }
     } else {
       // if has only one file object ...
