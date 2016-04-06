@@ -8,7 +8,7 @@ Ember.js file uploader. Works with any browser that supports
 Ember Uploader is a Ember CLI compatible addon and can be installed as such.
 
 ```
-ember install:addon ember-uploader
+ember install ember-uploader
 ```
 
 #### Basic Setup
