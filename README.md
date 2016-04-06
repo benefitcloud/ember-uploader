@@ -157,11 +157,11 @@ saving secret token on your client.
 import EmberUploader from 'ember-uploader';
 
 export default EmberUploader.FileField.extend({
-  url: '',
+  signingUrl: '',
 
   filesDidChange (files) {
     const uploader = EmberUploader.S3Uploader.create({
-      url: this.get('url')
+      signingUrl: this.get('signingUrl')
     });
 
     uploader.on('didUpload', response => {
