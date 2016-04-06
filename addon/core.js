@@ -19,7 +19,7 @@ import VERSION from 'ember-uploader/version';
  */
 
 const EmberUploader = Ember.Namespace.create({
-  VERSION: VERSION
+  VERSION
 });
 
 if (Ember.libraries) {
