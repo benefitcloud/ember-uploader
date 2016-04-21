@@ -38,14 +38,14 @@ Call the component, pass it the url, and thats it!
 {{file-upload url="/upload"}}
 ```
 
-#### Ajax request type
-By default request will be sent as `POST`. To override that, set `type` when
-creating the object
+#### Ajax Request Method
+By default, the request will be sent as `POST`. To override that, set `method` when
+creating the object:
 
 ```js
 const uploader = EmberUploader.Uploader.create({
   url: '/upload',
-  type: 'PUT'
+  method: 'PUT'
 });
 ```
 
