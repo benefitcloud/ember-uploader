@@ -27,7 +27,8 @@ export default EmberUploader.FileField.extend({
     });
 
     if (!Ember.isEmpty(files)) {
-      uploader.upload(files[0]);
+      // this second argument is optional and can to be sent as extra data with the upload
+      uploader.upload(files[0], { whatheverObject });
     }
   }
 });
@@ -120,7 +121,8 @@ export default EmberUploader.FileField.extend({
     });
 
     if (!Ember.isEmpty(files)) {
-      uploader.upload(files);
+      // this second argument is optional and can to be sent as extra data with the upload
+      uploader.upload(files, { whatheverObject });
     }
   }
 });
@@ -173,7 +175,8 @@ export default EmberUploader.FileField.extend({
 
     if (!Ember.isEmpty(files)) {
       // Send a sign request then upload to S3
-      uploader.upload(files[0]);
+      // this second argument is optional and can to be sent as extra data with the upload
+      uploader.upload(files[0], { whatheverObject });
     }
   }
 });
