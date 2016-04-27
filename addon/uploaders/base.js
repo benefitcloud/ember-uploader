@@ -187,8 +187,10 @@ export default Ember.Object.extend(Ember.Evented, {
    * object
    */
   ajax (url, data = {}, method = this.method) {
+    const ajaxSettings = get(this, 'ajaxSettings');
+
     return this.ajaxPromise({
-      ...this.ajaxSettings,
+      ...ajaxSettings,
       contentType: false,
       processData: false,
       xhr: () => {

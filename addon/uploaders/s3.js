@@ -69,13 +69,14 @@ export default Uploader.extend({
   sign (file, extra = {}) {
     const url    = get(this, 'signingUrl');
     const method = get(this, 'signingMethod');
+    const signingAjaxSettings = get(this, 'signingAjaxSettings');
 
     extra.name = file.name;
     extra.type = file.type;
     extra.size = file.size;
 
     const settings = {
-      ...this.signingAjaxSettings,
+      ...signingAjaxSettings,
       contentType: 'application/json',
       dataType: 'json',
       data: method.match(/get/i) ? extra : JSON.stringify(extra),
