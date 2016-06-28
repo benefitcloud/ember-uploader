@@ -12,7 +12,7 @@ ember install ember-uploader
 ```
 
 #### Basic Setup
-Create new component and extend `EmberUploader.FileField` provided by
+Create new component called `file-upload` and extend `EmberUploader.FileField` provided by
 ember-uploader. If you're using `EmberUploader.FileField`, it will
 automatically give you an input field, and will set `files` property when you
 choose a file.
