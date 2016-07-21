@@ -18,6 +18,7 @@ automatically give you an input field, and will set `files` property when you
 choose a file.
 
 ```js
+// app/component/file-upload.js
 import EmberUploader from 'ember-uploader';
 
 export default EmberUploader.FileField.extend({
