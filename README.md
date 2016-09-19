@@ -1,6 +1,6 @@
 # Ember Uploader [![Build Status](https://travis-ci.org/benefitcloud/ember-uploader.svg?branch=master)](https://travis-ci.org/benefitcloud/ember-uploader)
 
-Ember.js file uploader. Works with any browser that supports
+An Ember.js file uploader that works with any browser that supports
 [FormData](http://caniuse.com/#search=FormData).
 
 ## Getting Started
@@ -12,7 +12,7 @@ ember install ember-uploader
 ```
 
 #### Basic Setup
-Create new component called `file-upload` and extend `EmberUploader.FileField` provided by
+Create a new component called `file-upload` and extend `EmberUploader.FileField` provided by
 ember-uploader. If you're using `EmberUploader.FileField`, it will
 automatically give you an input field, and will set `files` property when you
 choose a file.
@@ -28,7 +28,7 @@ export default EmberUploader.FileField.extend({
 
     if (!Ember.isEmpty(files)) {
       // this second argument is optional and can to be sent as extra data with the upload
-      uploader.upload(files[0], { whatheverObject });
+      uploader.upload(files[0], { whateverObject });
     }
   }
 });
@@ -129,7 +129,7 @@ export default EmberUploader.FileField.extend({
 ```
 
 ### Modifying the request
-Ember uploader is using jQuery.ajax under the hood so it accepts the same
+Ember uploader uses jQuery.ajax under the hood so it accepts the same
 ajax settings via the `ajaxSettings` property which is then merged with any
 settings required by Ember Uploader. Here we modify the headers sent with
 the request.
