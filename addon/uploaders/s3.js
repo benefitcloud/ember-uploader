@@ -48,10 +48,10 @@ export default Uploader.extend({
         url = json.endpoint;
         delete json.endpoint;
       } else if (json.region) {
-        url = `//s3-${json.region}.amazonaws.com/${json.bucket}`;
+        url = `https://s3-${json.region}.amazonaws.com/${json.bucket}`;
         delete json.region;
       } else {
-        url = `//${json.bucket}.s3.amazonaws.com`;
+        url = `https://${json.bucket}.s3.amazonaws.com`;
       }
 
       return this.ajax(url, this.createFormData(file, json));
