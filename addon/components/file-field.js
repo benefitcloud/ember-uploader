@@ -3,7 +3,16 @@ import Ember from 'ember';
 export default Ember.Component.extend(Ember.Evented, {
   tagName: 'input',
   type: 'file',
-  attributeBindings: ['type', 'multiple', 'accept'],
+  attributeBindings: [
+    'name',
+    'disabled',
+    'form',
+    'type',
+    'accept',
+    'autofocus',
+    'required',
+    'multiple'
+  ],
   multiple: false,
   change (event) {
     const input = event.target;
