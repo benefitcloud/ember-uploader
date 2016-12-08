@@ -3,7 +3,6 @@ import Ember from 'ember';
 const {
   get,
   set,
-  isArray,
   run
 } = Ember;
 
