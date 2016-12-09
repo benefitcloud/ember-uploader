@@ -86,7 +86,6 @@ export default Ember.Object.extend(Ember.Evented, {
       }
     }
 
-    // if is a array of files ...
     if (files.constructor === FileList) {
       const paramKey = `${this.toNamespacedParam(this.paramName)}[]`;
 
