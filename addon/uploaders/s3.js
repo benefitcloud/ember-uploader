@@ -33,7 +33,7 @@ export default Uploader.extend({
   /**
    * Request signed upload policy and upload file(s) and any extra data
    *
-   * @param  {object|array} files  One file object or one array of files object
+   * @param  {object} file  A file object
    * @param  {object} extra Extra data to be sent with the upload
    * @return {object} Returns a Ember.RSVP.Promise wrapping the signing
    * request object
@@ -61,7 +61,7 @@ export default Uploader.extend({
   /**
    * Request signed upload policy
    *
-   * @param  {object|array} files  One file object or one array of files object
+   * @param  {object} file  A file object
    * @param  {object} extra Extra data to be sent with the upload
    * @return {object} Returns a Ember.RSVP.Promise wrapping the signing
    * request object
