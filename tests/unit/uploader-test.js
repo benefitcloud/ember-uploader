@@ -4,8 +4,9 @@ import { computed } from '@ember/object';
 import $ from 'jquery';
 import Uploader from 'ember-uploader/uploaders/uploader';
 import test from 'ember-sinon-qunit/test-support/test';
-import TestableFormData from '../helpers/form-data';
+import TestableFormData from 'dummy/tests/helpers/form-data';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
+import { isArray } from '@ember/array';
 
 let file;
 
@@ -77,11 +78,13 @@ module('EmberUploader.Uploader', function(hooks) {
     let uploader = Uploader.extend({
       paramName: 'files'
     }).create();
+    let formData = uploader.createFormData([1, 2, 3]);
 
-    let formData = uploader.createFormData([1,2,3]);
-    assert.equal(formData.data['files'][0], 1);
-    assert.equal(formData.data['files'][1], 2);
-    assert.equal(formData.data['files'][2], 3);
+    assert.strictEqual(formData.get('files'), null, 'does not set to name without empty brackets');
+
+    let files = formData.getAll('files[]');
+    assert.ok(isArray(files));
+    assert.deepEqual(files, [1, 2, 3])
   });
 
   test("uploads to the given url", function(assert) {
