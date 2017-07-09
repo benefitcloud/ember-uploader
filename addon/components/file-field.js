@@ -23,6 +23,12 @@ export default Component.extend(Evented, {
     this.$().on('change', (event) => { this.handleChange(event); });
   },
 
+  willDestroyElement (...args) {
+    this._super(...args);
+
+    this.$().off('change');
+  },
+
   handleChange (event) {
     const input = event.target;
     if (!Ember.isEmpty(input.files)) {
