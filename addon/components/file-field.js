@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend(Ember.Evented, {
+const { Component, Evented } = Ember;
+
+export default Component.extend(Evented, {
   tagName: 'input',
   type: 'file',
   attributeBindings: [
@@ -14,7 +16,20 @@ export default Ember.Component.extend(Ember.Evented, {
     'multiple'
   ],
   multiple: false,
-  change (event) {
+
+  didInsertElement (...args) {
+    this._super(...args);
+
+    this.$().on('change', (event) => { this.handleChange(event); });
+  },
+
+  willDestroyElement (...args) {
+    this._super(...args);
+
+    this.$().off('change');
+  },
+
+  handleChange (event) {
     const input = event.target;
     if (!Ember.isEmpty(input.files)) {
       this.trigger('filesDidChange', input.files);
