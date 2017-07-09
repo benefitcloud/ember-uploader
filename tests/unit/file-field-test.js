@@ -11,7 +11,7 @@ test('it triggers `filesDidChange` on change', () => {
       result = files;
     }
   }).create();
-  fileField.change({ target: { files: [ 'foo' ] }});
+  fileField.handleChange({ target: { files: [ 'foo' ] }});
 
   deepEqual(result, [ 'foo' ], 'it returns the files that changed');
 });
