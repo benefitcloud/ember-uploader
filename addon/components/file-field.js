@@ -9,6 +9,7 @@ export default Ember.Component.extend(Ember.Evented, {
     'form',
     'type',
     'accept',
+    'capture',
     'autofocus',
     'required',
     'multiple'
