@@ -1,7 +1,7 @@
 {
   "title": "Ember Uploader",
   "name": "ember-uploader",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Ember.js addon to facilitate uploading",
   "homepage": "https://github.com/benefitcloud/ember-uploader",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "ember-ajax": "0.7.1",
     "ember-cli": "2.5.0",
     "ember-cli-app-version": "^1.0.0",
-    "ember-cli-dependency-checker": "^1.2.0",
+    "ember-cli-dependency-checker": "^2.0.0",
     "ember-cli-eslint": "1.2.1",
     "ember-cli-htmlbars": "^1.0.3",
     "ember-cli-htmlbars-inline-precompile": "^0.3.1",
