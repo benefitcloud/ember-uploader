@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import { assign } from '@ember/polyfills';
 
 const {
   get,
@@ -186,24 +187,27 @@ export default Ember.Object.extend(Ember.Evented, {
    * object
    */
   ajax (url, data = {}, method = this.method) {
-    const ajaxSettings = get(this, 'ajaxSettings');
-
-    return this.ajaxPromise({
-      ...ajaxSettings,
-      contentType: false,
-      processData: false,
-      xhr: () => {
-        const xhr = Ember.$.ajaxSettings.xhr();
-        xhr.upload.onprogress = (event) => {
-          this.didProgress(event);
-        };
-        this.one('isAborting', () => xhr.abort());
-        return xhr;
+    const ajaxSettings = assign(
+      {},
+      {
+        contentType: false,
+        processData: false,
+        xhr: () => {
+          const xhr = Ember.$.ajaxSettings.xhr();
+          xhr.upload.onprogress = (event) => {
+            this.didProgress(event);
+          };
+          this.one('isAborting', () => xhr.abort());
+          return xhr;
+        },
+        url,
+        data,
+        method
       },
-      url,
-      data,
-      method
-    });
+      get(this, 'ajaxSettings')
+    );
+
+    return this.ajaxPromise(ajaxSettings);
   },
 
   /**

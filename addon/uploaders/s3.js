@@ -1,5 +1,6 @@
 import Ember    from 'ember';
 import Uploader from 'ember-uploader/uploaders/base';
+import { assign } from '@ember/polyfills';
 
 const {
   get,
@@ -75,14 +76,17 @@ export default Uploader.extend({
     extra.type = file.type;
     extra.size = file.size;
 
-    const settings = {
-      ...signingAjaxSettings,
-      contentType: 'application/json',
-      dataType: 'json',
-      data: method.match(/get/i) ? extra : JSON.stringify(extra),
-      method,
-      url
-    };
+    const settings = assign(
+      {},
+      {
+        contentType: 'application/json',
+        dataType: 'json',
+        data: method.match(/get/i) ? extra : JSON.stringify(extra),
+        method,
+        url
+      },
+      signingAjaxSettings,
+    );
 
     set(this, 'isSigning', true);
 
