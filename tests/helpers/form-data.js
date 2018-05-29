@@ -1,3 +1,4 @@
+import { isArray } from '@ember/array';
 function TestableFormData() {
   this.data = {}
 }
@@ -24,7 +25,7 @@ TestableFormData.prototype.append = function(key, value) {
   if (matches) {
     const arrayKey = matches.reverse()[0];
 
-    if (!Ember.isArray(this.data[arrayKey])) {
+    if (!isArray(this.data[arrayKey])) {
       this.data[arrayKey] = [];
     }
 

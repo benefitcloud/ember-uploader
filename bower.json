@@ -1,8 +1,0 @@
-{
-  "name": "ember-uploader",
-  "dependencies": {
-    "pretender": "~0.10.1",
-    "Faker": "~3.0.0",
-    "sinonjs": "~1.17.1"
-  }
-}

@@ -1,3 +1,5 @@
+import { computed } from '@ember/object';
+import $ from 'jquery';
 import { Uploader } from 'ember-uploader/uploaders';
 import test from 'dummy/tests/ember-sinon-qunit/test';
 import startMirage from '../helpers/setup-mirage-for-units';
@@ -180,7 +182,7 @@ test("it can receive extra data", function() {
 });
 
 test("it allows overriding ajax settings", function() {
-  this.stub(Ember.$, 'ajax');
+  this.stub($, 'ajax');
 
   expect(1);
 
@@ -194,18 +196,18 @@ test("it allows overriding ajax settings", function() {
 
   uploader.upload(file);
 
-  equal(Ember.$.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
+  equal($.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
 });
 
 test("it allows ajaxSettings to be a computed property", function() {
-  this.stub(Ember.$, 'ajax');
+  this.stub($, 'ajax');
 
   expect(2);
 
   let uploader = Uploader.extend({
     _testIterator: 0,
 
-    ajaxSettings: Ember.computed('_testIterator', function() {
+    ajaxSettings: computed('_testIterator', function() {
       return {
         headers: {
           'X-My-Incrementor': this.get('_testIterator'),
@@ -215,9 +217,9 @@ test("it allows ajaxSettings to be a computed property", function() {
   }).create();
 
   uploader.upload(file);
-  equal(Ember.$.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
+  equal($.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
 
   uploader.set('_testIterator', 1);
   uploader.upload(file);
-  equal(Ember.$.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
+  equal($.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
 });

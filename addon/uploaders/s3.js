@@ -1,12 +1,9 @@
-import Ember    from 'ember';
+import $ from 'jquery';
+import { Promise } from 'rsvp';
+import { set, get } from '@ember/object';
+import { run } from '@ember/runloop';
 import Uploader from 'ember-uploader/uploaders/base';
 import { assign } from '@ember/polyfills';
-
-const {
-  get,
-  set,
-  run
-} = Ember;
 
 export default Uploader.extend({
   /**
@@ -90,7 +87,7 @@ export default Uploader.extend({
 
     set(this, 'isSigning', true);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       settings.success = (json) => {
         run(null, resolve, this.didSign(json));
       };
@@ -99,7 +96,7 @@ export default Uploader.extend({
         run(null, reject, this.didErrorOnSign(jqXHR, responseText, errorThrown));
       };
 
-      Ember.$.ajax(settings);
+      $.ajax(settings);
     });
   },
 

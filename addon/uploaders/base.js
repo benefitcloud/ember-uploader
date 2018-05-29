@@ -1,13 +1,11 @@
-import Ember from 'ember';
+import { Promise } from 'rsvp';
+import $ from 'jquery';
+import Evented from '@ember/object/evented';
+import EmberObject, { set, get } from '@ember/object';
+import { run } from '@ember/runloop';
 import { assign } from '@ember/polyfills';
 
-const {
-  get,
-  set,
-  run
-} = Ember;
-
-export default Ember.Object.extend(Ember.Evented, {
+export default EmberObject.extend(Evented, {
   /**
    * Target url to upload to
    *
@@ -45,12 +43,15 @@ export default Ember.Object.extend(Ember.Evented, {
    */
   isUploading: false,
 
-  /**
-   * The ajax settings used in all requests made from the uploader
-   *
-   * @property ajaxSettings
-   */
-  ajaxSettings: {},
+  init() {
+    this._super(...arguments);
+    /**
+     * The ajax settings used in all requests made from the uploader
+     *
+     * @property ajaxSettings
+     */
+    set(this, 'ajaxSettings', {});
+  },
 
   /**
    * Start upload of file(s) and any extra data
@@ -193,7 +194,7 @@ export default Ember.Object.extend(Ember.Evented, {
         contentType: false,
         processData: false,
         xhr: () => {
-          const xhr = Ember.$.ajaxSettings.xhr();
+          const xhr = $.ajaxSettings.xhr();
           xhr.upload.onprogress = (event) => {
             this.didProgress(event);
           };
@@ -218,7 +219,7 @@ export default Ember.Object.extend(Ember.Evented, {
    * @return {object} Returns a Ember.RSVP.Promise wrapping the ajax request
    */
   ajaxPromise (settings) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       settings.success = (data) => {
         run(null, resolve, this.didUpload(data));
       };
@@ -227,7 +228,7 @@ export default Ember.Object.extend(Ember.Evented, {
         run(null, reject, this.didError(jqXHR, responseText, errorThrown));
       };
 
-      Ember.$.ajax(settings);
+      $.ajax(settings);
     });
   }
 });

@@ -1,5 +1,3 @@
-import Mirage from 'ember-cli-mirage';
-
 export default function() {
   this.get('/sign', { bucket: 'testbucket' });
   this.post('http://testbucket.s3.amazonaws.com');
