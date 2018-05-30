@@ -1,15 +1,17 @@
+import { module } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import { computed } from '@ember/object';
 import $ from 'jquery';
 import { Uploader } from 'ember-uploader/uploaders';
-import test from 'dummy/tests/ember-sinon-qunit/test';
-import startMirage from '../helpers/setup-mirage-for-units';
+import test from 'ember-sinon-qunit/test-support/test';
 import TestableFormData from '../helpers/form-data';
 
 let file;
 
-module("EmberUploader.Uploader", {
-  setup () {
-    startMirage(this.container);
+module("EmberUploader.Uploader", function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
     if (typeof WebKitBlobBuilder === "undefined") {
       file = new Blob(['test'], { type: 'text/plain' });
     } else {
@@ -19,207 +21,207 @@ module("EmberUploader.Uploader", {
     }
 
     TestableFormData.inject();
-  },
+  });
 
-  teardown: function() {
+  hooks.afterEach(function() {
     TestableFormData.remove();
-  }
-});
-
-test("has a url of '/test'", function() {
-  let uploader = Uploader.extend({
-    url: '/test'
-  }).create();
-
-  equal(uploader.get('url'), '/test');
-});
-
-test("has a paramName of 'upload'", function() {
-  let uploader = Uploader.extend({
-    paramName: 'upload'
-  }).create();
-
-  equal(uploader.get('paramName'), 'upload');
-});
-
-test("has a paramNamespace of 'post'", function() {
-  let uploader = Uploader.extend({
-    paramNamespace: 'post'
-  }).create();
-
-  equal(uploader.get('paramNamespace'), 'post');
-});
-
-test("creates a param namespace", function() {
-  let uploader = Uploader.extend({
-    paramNamespace: 'post'
-  }).create();
-
-  equal(uploader.toNamespacedParam('upload'), 'post[upload]');
-});
-
-test("has an ajax request of type 'PUT'", function() {
-  let uploader = Uploader.extend({
-    method: 'PUT'
-  }).create();
-
-  equal(uploader.get('method'), 'PUT');
-});
-
-test("it can upload multiple files", function() {
-  expect(3);
-
-  let uploader = Uploader.extend({
-    paramName: 'files'
-  }).create();
-
-  let formData = uploader.createFormData([1,2,3]);
-  equal(formData.data['files'][0], 1);
-  equal(formData.data['files'][1], 2);
-  equal(formData.data['files'][2], 3);
-});
-
-test("uploads to the given url", function() {
-  expect(1);
-
-  let uploader = Uploader.extend({
-    url: '/upload',
-    file: file
-  }).create();
-
-  uploader.on('didUpload', function(data) {
-    start();
-    ok(true);
   });
 
-  uploader.upload(file);
+  test("has a url of '/test'", function(assert) {
+    let uploader = Uploader.extend({
+      url: '/test'
+    }).create();
 
-  stop();
-});
-
-test("uploads promise gets resolved", function() {
-  expect(1);
-
-  let uploader = Uploader.extend({
-    url: '/upload',
-    file: file
-  }).create();
-
-  uploader.upload(file).then(function(data) {
-    start();
-    ok(true);
+    assert.equal(uploader.get('url'), '/test');
   });
 
-  stop();
-});
+  test("has a paramName of 'upload'", function(assert) {
+    let uploader = Uploader.extend({
+      paramName: 'upload'
+    }).create();
 
-test("uploads promise gets rejected", function() {
-  expect(1);
-
-  var uploader = Uploader.extend({
-    url: '/invalid',
-    file: file
-  }).create();
-
-  uploader.upload(file).then(function(data) {
-  }, function(data) {
-    start();
-    ok(true);
+    assert.equal(uploader.get('paramName'), 'upload');
   });
 
-  stop();
-});
+  test("has a paramNamespace of 'post'", function(assert) {
+    let uploader = Uploader.extend({
+      paramNamespace: 'post'
+    }).create();
 
-test("error response not undefined", function() {
-  expect(1);
-
-  var uploader = Uploader.extend({
-    url: '/invalid'
-  }).create();
-
-  uploader.upload(file).then(null, function(error) {
-    start();
-    equal(error.status, 404);
+    assert.equal(uploader.get('paramNamespace'), 'post');
   });
 
-  stop();
-});
+  test("creates a param namespace", function(assert) {
+    let uploader = Uploader.extend({
+      paramNamespace: 'post'
+    }).create();
 
-test("emits progress event", function() {
-  expect(1);
-
-  server.timing = 100;
-
-  var uploader = Uploader.extend({
-    url: '/upload',
-    file: file
-  }).create();
-
-  uploader.on('progress', function(e) {
-    start();
-    ok(true);
+    assert.equal(uploader.toNamespacedParam('upload'), 'post[upload]');
   });
 
-  uploader.upload(file);
+  test("has an ajax request of type 'PUT'", function(assert) {
+    let uploader = Uploader.extend({
+      method: 'PUT'
+    }).create();
 
-  stop();
-});
+    assert.equal(uploader.get('method'), 'PUT');
+  });
 
-test("it can receive extra data", function() {
-  expect(1);
+  test("it can upload multiple files", function(assert) {
+    assert.expect(3);
 
-  var data = { test: 'valid' };
+    let uploader = Uploader.extend({
+      paramName: 'files'
+    }).create();
 
-  var uploader = Uploader.extend({
-    url: '/upload',
-    createFormData: function(file, extra) {
-      equal(extra, data);
-      return this._super(file, extra);
-    }
-  }).create();
+    let formData = uploader.createFormData([1,2,3]);
+    assert.equal(formData.data['files'][0], 1);
+    assert.equal(formData.data['files'][1], 2);
+    assert.equal(formData.data['files'][2], 3);
+  });
 
-  uploader.upload(file, data);
-});
+  test("uploads to the given url", function(assert) {
+    assert.expect(1);
 
-test("it allows overriding ajax settings", function() {
-  this.stub($, 'ajax');
+    let uploader = Uploader.extend({
+      url: '/upload',
+      file: file
+    }).create();
 
-  expect(1);
+    uploader.on('didUpload', function(data) {
+      start();
+      ok(true);
+    });
 
-  let uploader = Uploader.extend({
-    ajaxSettings: {
-      headers: {
-        'Content-Type': 'text/html'
+    uploader.upload(file);
+
+    stop();
+  });
+
+  test("uploads promise gets resolved", function(assert) {
+    assert.expect(1);
+
+    let uploader = Uploader.extend({
+      url: '/upload',
+      file: file
+    }).create();
+
+    uploader.upload(file).then(function(data) {
+      start();
+      ok(true);
+    });
+
+    stop();
+  });
+
+  test("uploads promise gets rejected", function(assert) {
+    assert.expect(1);
+
+    var uploader = Uploader.extend({
+      url: '/invalid',
+      file: file
+    }).create();
+
+    uploader.upload(file).then(function(data) {
+    }, function(data) {
+      start();
+      ok(true);
+    });
+
+    stop();
+  });
+
+  test("error response not undefined", function(assert) {
+    assert.expect(1);
+
+    var uploader = Uploader.extend({
+      url: '/invalid'
+    }).create();
+
+    uploader.upload(file).then(null, function(error) {
+      start();
+      assert.equal(error.status, 404);
+    });
+
+    stop();
+  });
+
+  test("emits progress event", function(assert) {
+    assert.expect(1);
+
+    server.timing = 100;
+
+    var uploader = Uploader.extend({
+      url: '/upload',
+      file: file
+    }).create();
+
+    uploader.on('progress', function(e) {
+      start();
+      ok(true);
+    });
+
+    uploader.upload(file);
+
+    stop();
+  });
+
+  test("it can receive extra data", function(assert) {
+    assert.expect(1);
+
+    var data = { test: 'valid' };
+
+    var uploader = Uploader.extend({
+      url: '/upload',
+      createFormData: function(file, extra) {
+        assert.equal(extra, data);
+        return this._super(file, extra);
       }
-    }
-  }).create();
+    }).create();
 
-  uploader.upload(file);
+    uploader.upload(file, data);
+  });
 
-  equal($.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
-});
+  test("it allows overriding ajax settings", function(assert) {
+    this.stub($, 'ajax');
 
-test("it allows ajaxSettings to be a computed property", function() {
-  this.stub($, 'ajax');
+    assert.expect(1);
 
-  expect(2);
-
-  let uploader = Uploader.extend({
-    _testIterator: 0,
-
-    ajaxSettings: computed('_testIterator', function() {
-      return {
+    let uploader = Uploader.extend({
+      ajaxSettings: {
         headers: {
-          'X-My-Incrementor': this.get('_testIterator'),
+          'Content-Type': 'text/html'
         }
-      };
-    }),
-  }).create();
+      }
+    }).create();
 
-  uploader.upload(file);
-  equal($.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
+    uploader.upload(file);
 
-  uploader.set('_testIterator', 1);
-  uploader.upload(file);
-  equal($.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
+    assert.equal($.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
+  });
+
+  test("it allows ajaxSettings to be a computed property", function(assert) {
+    this.stub($, 'ajax');
+
+    assert.expect(2);
+
+    let uploader = Uploader.extend({
+      _testIterator: 0,
+
+      ajaxSettings: computed('_testIterator', function() {
+        return {
+          headers: {
+            'X-My-Incrementor': this.get('_testIterator'),
+          }
+        };
+      }),
+    }).create();
+
+    uploader.upload(file);
+    assert.equal($.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
+
+    uploader.set('_testIterator', 1);
+    uploader.upload(file);
+    assert.equal($.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
+  });
 });

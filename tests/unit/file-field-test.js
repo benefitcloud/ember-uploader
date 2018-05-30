@@ -1,17 +1,22 @@
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 import FileField from 'dummy/components/file-field';
 
-module('EmberUploader.FileField');
+module('EmberUploader.FileField', function(hooks) {
+  setupTest(hooks);
 
-test('it triggers `filesDidChange` on change', () => {
-  let result;
-  expect(1);
+  test('it triggers `filesDidChange` on change', function(assert) {
+    let result;
+    assert.expect(1);
 
-  const fileField = FileField.extend({
-    filesDidChange (files) {
-      result = files;
-    }
-  }).create();
-  fileField.change({ target: { files: [ 'foo' ] }});
+    const fileField = this.owner.factoryFor('component:file-field').create({
+      filesDidChange (files) {
+        result = files;
+      }
+    });
 
-  deepEqual(result, [ 'foo' ], 'it returns the files that changed');
+    fileField.change({ target: { files: [ 'foo' ] }});
+
+    assert.deepEqual(result, [ 'foo' ], 'it returns the files that changed');
+  });
 });

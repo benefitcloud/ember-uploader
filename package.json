@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "ember build",
-    "start": "ember server",
+    "start": "ember serve",
     "test": "ember try:each"
   },
   "engines": {
@@ -29,7 +29,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
-    "ember-cli": "~2.18.2",
+    "ember-cli": "~3.1.4",
     "ember-cli-app-version": "^3.2.0",
     "ember-cli-dependency-checker": "^2.0.0",
     "ember-cli-eslint": "^4.2.1",
@@ -45,11 +45,13 @@
     "ember-disable-prototype-extensions": "^1.1.2",
     "ember-export-application-global": "^2.0.0",
     "ember-load-initializers": "^1.0.0",
+    "ember-maybe-import-regenerator": "^0.1.6",
     "ember-resolver": "^4.0.0",
     "ember-sinon": "2.1.0",
     "ember-sinon-qunit": "3.1.0",
-    "ember-source": "~2.18.0",
-    "ember-try": "^0.2.2",
+    "ember-source": "~3.1.2",
+    "ember-source-channel-url": "^1.1.0",
+    "ember-try": "^0.2.23",
     "eslint-plugin-ember": "^5.2.0",
     "eslint-plugin-node": "^6.0.1",
     "glob": "^4.5.3",
