@@ -36,7 +36,7 @@ export default Uploader.extend({
    * @return {object} Returns a Ember.RSVP.Promise wrapping the signing
    * request object
    */
-  upload (file, extra = {}) {
+  upload(file, extra = {}) {
     return this.sign(file, extra).then((json) => {
       let url;
 
@@ -52,6 +52,7 @@ export default Uploader.extend({
         url = `https://${json.bucket}.s3.amazonaws.com`;
       }
 
+      debugger;
       return this.ajax(url, this.createFormData(file, json));
     });
   },
@@ -64,7 +65,7 @@ export default Uploader.extend({
    * @return {object} Returns a Ember.RSVP.Promise wrapping the signing
    * request object
    */
-  sign (file, extra = {}) {
+  sign(file, extra = {}) {
     const url    = get(this, 'signingUrl');
     const method = get(this, 'signingMethod');
     const signingAjaxSettings = get(this, 'signingAjaxSettings');

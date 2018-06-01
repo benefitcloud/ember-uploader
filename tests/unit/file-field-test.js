@@ -17,6 +17,6 @@ module('EmberUploader.FileField', function(hooks) {
 
     fileField.change({ target: { files: [ 'foo' ] }});
 
-    assert.deepEqual(result, [ 'foo' ], 'it returns the files that changed');
+    assert.deepEqual(result, ['foo'], 'it returns the files that changed');
   });
 });

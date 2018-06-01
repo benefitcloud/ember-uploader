@@ -90,7 +90,7 @@ module("EmberUploader.Uploader", function(hooks) {
 
     uploader.on('didUpload', function(data) {
       start();
-      ok(true);
+      assert.ok(true);
     });
 
     uploader.upload(file);
@@ -108,7 +108,7 @@ module("EmberUploader.Uploader", function(hooks) {
 
     uploader.upload(file).then(function(data) {
       start();
-      ok(true);
+      assert.ok(true);
     });
 
     stop();
@@ -125,7 +125,7 @@ module("EmberUploader.Uploader", function(hooks) {
     uploader.upload(file).then(function(data) {
     }, function(data) {
       start();
-      ok(true);
+      assert.ok(true);
     });
 
     stop();
@@ -158,7 +158,7 @@ module("EmberUploader.Uploader", function(hooks) {
 
     uploader.on('progress', function(e) {
       start();
-      ok(true);
+      assert.ok(true);
     });
 
     uploader.upload(file);
