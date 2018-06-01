@@ -5,6 +5,7 @@ import $ from 'jquery';
 import { Uploader } from 'ember-uploader/uploaders';
 import test from 'ember-sinon-qunit/test-support/test';
 import TestableFormData from '../helpers/form-data';
+import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 
 let file;
 
@@ -12,6 +13,8 @@ module("EmberUploader.Uploader", function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function() {
+    this.server = startMirage();
+
     if (typeof WebKitBlobBuilder === "undefined") {
       file = new Blob(['test'], { type: 'text/plain' });
     } else {
@@ -24,6 +27,7 @@ module("EmberUploader.Uploader", function(hooks) {
   });
 
   hooks.afterEach(function() {
+    this.server.shutdown();
     TestableFormData.remove();
   });
 
@@ -89,13 +93,10 @@ module("EmberUploader.Uploader", function(hooks) {
     }).create();
 
     uploader.on('didUpload', function(data) {
-      start();
       assert.ok(true);
     });
 
     uploader.upload(file);
-
-    stop();
   });
 
   test("uploads promise gets resolved", function(assert) {
@@ -107,71 +108,59 @@ module("EmberUploader.Uploader", function(hooks) {
     }).create();
 
     uploader.upload(file).then(function(data) {
-      start();
       assert.ok(true);
     });
-
-    stop();
   });
 
   test("uploads promise gets rejected", function(assert) {
     assert.expect(1);
 
-    var uploader = Uploader.extend({
+    let uploader = Uploader.extend({
       url: '/invalid',
       file: file
     }).create();
 
     uploader.upload(file).then(function(data) {
     }, function(data) {
-      start();
       assert.ok(true);
     });
-
-    stop();
   });
 
   test("error response not undefined", function(assert) {
     assert.expect(1);
 
-    var uploader = Uploader.extend({
+    let uploader = Uploader.extend({
       url: '/invalid'
     }).create();
 
     uploader.upload(file).then(null, function(error) {
-      start();
       assert.equal(error.status, 404);
     });
-
-    stop();
   });
 
-  test("emits progress event", function(assert) {
+  test("emits progress event", async function(assert) {
     assert.expect(1);
 
     server.timing = 100;
 
-    var uploader = Uploader.extend({
+    let uploader = Uploader.extend({
       url: '/upload',
       file: file
     }).create();
 
     uploader.on('progress', function(e) {
-      start();
-      assert.ok(true);
+      assert.ok(true, 'progress event was emitted');
     });
 
-    uploader.upload(file);
-
-    stop();
+    await uploader.upload(file);
   });
 
   test("it can receive extra data", function(assert) {
     assert.expect(1);
 
-    var data = { test: 'valid' };
+    let data = { test: 'valid' };
 
-    var uploader = Uploader.extend({
+    let uploader = Uploader.extend({
       url: '/upload',
       createFormData: function(file, extra) {
         assert.equal(extra, data);

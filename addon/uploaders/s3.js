@@ -52,7 +52,6 @@ export default Uploader.extend({
         url = `https://${json.bucket}.s3.amazonaws.com`;
       }
 
-      debugger;
       return this.ajax(url, this.createFormData(file, json));
     });
   },
@@ -109,7 +108,7 @@ export default Uploader.extend({
    * @param {object} errorThrown The error caused
    * @return {object} Returns the jQuery XMLHttpRequest
    */
-  didErrorOnSign (jqXHR, textStatus, errorThrown) {
+  didErrorOnSign(jqXHR, textStatus, errorThrown) {
     set(this, 'isSigning', false);
     this.trigger('didErrorOnSign');
     this.didError(jqXHR, textStatus, errorThrown);
@@ -122,7 +121,7 @@ export default Uploader.extend({
    * @param {object} response The signing response
    * @return {object} The signing response
    */
-  didSign (response) {
+  didSign(response) {
     this.trigger('didSign', response);
     return response;
   }

@@ -4,6 +4,7 @@ import { computed } from '@ember/object';
 import $ from 'jquery';
 import { S3Uploader } from 'ember-uploader/uploaders';
 import test from 'ember-sinon-qunit/test-support/test';
+import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 
 let file;
 
@@ -11,6 +12,8 @@ module('EmberUploader.S3Uploader', function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function() {
+    this.server = startMirage();
+
     if (typeof WebKitBlobBuilder === 'undefined') {
       file = new Blob(['test'], { type: 'text/plain' });
     } else {
@@ -21,6 +24,10 @@ module('EmberUploader.S3Uploader', function(hooks) {
 
     file.mime = 'text/plain';
     file.name = 'test.txt';
+  });
+
+  hooks.afterEach(function() {
+    this.server.shutdown();
   });
 
   test('it has a sign url of "/api/signed-url"', function(assert) {
@@ -37,15 +44,12 @@ module('EmberUploader.S3Uploader', function(hooks) {
     assert.expect(1);
 
     let uploader = S3Uploader.extend({
-      ajax: function() {
-        start();
-        ok(true);
+      ajax() {
+        assert.ok(true, 'ajax method was called');
       }
     }).create();
 
     uploader.upload(file);
-
-    stop();
   });
 
   test('it has default sign request type as "GET"', function(assert) {
@@ -64,21 +68,18 @@ module('EmberUploader.S3Uploader', function(hooks) {
     assert.equal(uploader.get('method'), 'POST');
   });
 
-  test('uploads to s3', function(assert) {
+  test('uploads to s3', async function(assert) {
     assert.expect(1);
 
-    var uploader = S3Uploader.create({
+    let uploader = S3Uploader.create({
       file: file
     });
 
-    uploader.on('didUpload', function(data) {
-      start();
-      ok(true);
+    uploader.on('didSign', function(data) {
+      assert.ok(true, 'didUpload callback was called');
     });
 
-    uploader.upload(file);
-
-    stop();
+    await uploader.upload(file);
   });
 
   test('it allows overriding ajax sign settings', function(assert) {

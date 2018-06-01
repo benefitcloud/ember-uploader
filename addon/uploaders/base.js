@@ -43,16 +43,6 @@ export default EmberObject.extend(Evented, {
    */
   isUploading: false,
 
-  init() {
-    this._super(...arguments);
-    /**
-     * The ajax settings used in all requests made from the uploader
-     *
-     * @property ajaxSettings
-     */
-    set(this, 'ajaxSettings', {});
-  },
-
   /**
    * Start upload of file(s) and any extra data
    *
