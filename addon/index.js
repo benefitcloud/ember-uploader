@@ -1,3 +1,4 @@
+import { VERSION } from '@ember/version';
 import Ember from 'ember';
 
 /**
@@ -8,7 +9,7 @@ import Ember from 'ember';
 
 import EmberUploader from 'ember-uploader/core';
 
-if (Ember.VERSION.match(/^1/)) {
+if (VERSION.match(/^1/)) {
   Ember.Logger.warn(
     'This version of Ember Uploader has not been tested on Ember 1.x. Use at your own risk.');
 }

@@ -1,11 +1,9 @@
-import Ember    from 'ember';
+import $ from 'jquery';
+import { Promise } from 'rsvp';
+import { set, get } from '@ember/object';
+import { run } from '@ember/runloop';
 import Uploader from 'ember-uploader/uploaders/base';
-
-const {
-  get,
-  set,
-  run
-} = Ember;
+import { assign } from '@ember/polyfills';
 
 export default Uploader.extend({
   /**
@@ -38,7 +36,7 @@ export default Uploader.extend({
    * @return {object} Returns a Ember.RSVP.Promise wrapping the signing
    * request object
    */
-  upload (file, extra = {}) {
+  upload(file, extra = {}) {
     return this.sign(file, extra).then((json) => {
       let url;
 
@@ -66,7 +64,7 @@ export default Uploader.extend({
    * @return {object} Returns a Ember.RSVP.Promise wrapping the signing
    * request object
    */
-  sign (file, extra = {}) {
+  sign(file, extra = {}) {
     const url    = get(this, 'signingUrl');
     const method = get(this, 'signingMethod');
     const signingAjaxSettings = get(this, 'signingAjaxSettings');
@@ -75,18 +73,21 @@ export default Uploader.extend({
     extra.type = file.type;
     extra.size = file.size;
 
-    const settings = {
-      ...signingAjaxSettings,
-      contentType: 'application/json',
-      dataType: 'json',
-      data: method.match(/get/i) ? extra : JSON.stringify(extra),
-      method,
-      url
-    };
+    const settings = assign(
+      {},
+      {
+        contentType: 'application/json',
+        dataType: 'json',
+        data: method.match(/get/i) ? extra : JSON.stringify(extra),
+        method,
+        url
+      },
+      signingAjaxSettings,
+    );
 
     set(this, 'isSigning', true);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       settings.success = (json) => {
         run(null, resolve, this.didSign(json));
       };
@@ -95,7 +96,7 @@ export default Uploader.extend({
         run(null, reject, this.didErrorOnSign(jqXHR, responseText, errorThrown));
       };
 
-      Ember.$.ajax(settings);
+      $.ajax(settings);
     });
   },
 
@@ -107,7 +108,7 @@ export default Uploader.extend({
    * @param {object} errorThrown The error caused
    * @return {object} Returns the jQuery XMLHttpRequest
    */
-  didErrorOnSign (jqXHR, textStatus, errorThrown) {
+  didErrorOnSign(jqXHR, textStatus, errorThrown) {
     set(this, 'isSigning', false);
     this.trigger('didErrorOnSign');
     this.didError(jqXHR, textStatus, errorThrown);
@@ -120,7 +121,7 @@ export default Uploader.extend({
    * @param {object} response The signing response
    * @return {object} The signing response
    */
-  didSign (response) {
+  didSign(response) {
     this.trigger('didSign', response);
     return response;
   }

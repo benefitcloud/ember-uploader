@@ -1,6 +1,8 @@
-import Ember from 'ember';
+import { isEmpty } from '@ember/utils';
+import Evented from '@ember/object/evented';
+import Component from '@ember/component';
 
-export default Ember.Component.extend(Ember.Evented, {
+export default Component.extend(Evented, {
   tagName: 'input',
   type: 'file',
   attributeBindings: [
@@ -16,7 +18,7 @@ export default Ember.Component.extend(Ember.Evented, {
   multiple: false,
   change (event) {
     const input = event.target;
-    if (!Ember.isEmpty(input.files)) {
+    if (!isEmpty(input.files)) {
       this.trigger('filesDidChange', input.files);
     }
   }

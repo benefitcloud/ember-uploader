@@ -1,13 +1,20 @@
+import { module } from 'qunit';
+import { setupTest } from 'ember-qunit';
+import { computed } from '@ember/object';
+import $ from 'jquery';
 import { S3Uploader } from 'ember-uploader/uploaders';
-import test from 'dummy/tests/ember-sinon-qunit/test';
-import startMirage from '../helpers/setup-mirage-for-units';
+import test from 'ember-sinon-qunit/test-support/test';
+import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 
 let file;
 
-module("EmberUploader.S3Uploader", {
-  setup () {
-    startMirage(this.container);
-    if (typeof WebKitBlobBuilder === "undefined") {
+module('EmberUploader.S3Uploader', function(hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function() {
+    this.server = startMirage();
+
+    if (typeof WebKitBlobBuilder === 'undefined') {
       file = new Blob(['test'], { type: 'text/plain' });
     } else {
       const builder = new WebKitBlobBuilder();
@@ -17,108 +24,106 @@ module("EmberUploader.S3Uploader", {
 
     file.mime = 'text/plain';
     file.name = 'test.txt';
-  }
-});
-
-test("it has a sign url of '/api/signed-url'", () => {
-  expect(1);
-
-  let uploader = S3Uploader.create({
-    signingUrl: '/api/signed-url'
   });
 
-  equal(uploader.signingUrl, '/api/signed-url');
-});
-
-test("it uploads after signing", function () {
-  expect(1);
-
-  let uploader = S3Uploader.extend({
-    ajax: function() {
-      start();
-      ok(true);
-    }
-  }).create();
-
-  uploader.upload(file);
-
-  stop();
-});
-
-test("it has default sign request type as 'GET'", function () {
-  expect(1);
-
-  let uploader = S3Uploader.create();
-  equal(uploader.get('signingMethod'), 'GET');
-});
-
-test("sign request type can be customized", function () {
-  expect(1);
-
-  let uploader = S3Uploader.create({
-    method: 'POST'
-  });
-  equal(uploader.get('method'), 'POST');
-});
-
-test("uploads to s3", function() {
-  expect(1);
-
-  var uploader = S3Uploader.create({
-    file: file
+  hooks.afterEach(function() {
+    this.server.shutdown();
   });
 
-  uploader.on('didUpload', function(data) {
-    start();
-    ok(true);
+  test('it has a sign url of "/api/signed-url"', function(assert) {
+    assert.expect(1);
+
+    let uploader = S3Uploader.create({
+      signingUrl: '/api/signed-url'
+    });
+
+    assert.equal(uploader.signingUrl, '/api/signed-url');
   });
 
-  uploader.upload(file);
+  test('it uploads after signing', function(assert) {
+    assert.expect(1);
 
-  stop();
-});
+    let uploader = S3Uploader.extend({
+      ajax() {
+        assert.ok(true, 'ajax method was called');
+      }
+    }).create();
 
-test("it allows overriding ajax sign settings", function () {
-  this.stub(Ember.$, 'ajax');
+    uploader.upload(file);
+  });
 
-  expect(1);
+  test('it has default sign request type as "GET"', function(assert) {
+    assert.expect(1);
 
-  const settings = {
-    headers: {
-      'Content-Type': 'text/html'
-    }
-  };
+    let uploader = S3Uploader.create();
+    assert.equal(uploader.get('signingMethod'), 'GET');
+  });
 
-  const uploader = S3Uploader.extend({
-    signingAjaxSettings: settings
-  }).create();
+  test('sign request type can be customized', function(assert) {
+    assert.expect(1);
 
-  uploader.sign('/test');
+    let uploader = S3Uploader.create({
+      method: 'POST'
+    });
+    assert.equal(uploader.get('method'), 'POST');
+  });
 
-  equal(Ember.$.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
-});
+  test('uploads to s3', async function(assert) {
+    assert.expect(1);
 
-test("it allows signingAjaxSettings to be a computed property", function () {
-  this.stub(Ember.$, 'ajax');
+    let uploader = S3Uploader.create({
+      file: file
+    });
 
-  expect(2);
+    uploader.on('didSign', function(data) {
+      assert.ok(true, 'didUpload callback was called');
+    });
 
-  const uploader = S3Uploader.extend({
-    _testIterator: 0,
+    await uploader.upload(file);
+  });
 
-    signingAjaxSettings: Ember.computed('_testIterator', function() {
-      return {
-        headers: {
-          'X-My-Incrementor': this.get('_testIterator'),
-        }
-      };
-    }),
-  }).create();
+  test('it allows overriding ajax sign settings', function(assert) {
+    this.stub($, 'ajax');
 
-  uploader.sign('/test');
-  equal(Ember.$.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
+    assert.expect(1);
 
-  uploader.set('_testIterator', 1);
-  uploader.sign('/test');
-  equal(Ember.$.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
+    const settings = {
+      headers: {
+        'Content-Type': 'text/html'
+      }
+    };
+
+    const uploader = S3Uploader.extend({
+      signingAjaxSettings: settings
+    }).create();
+
+    uploader.sign('/test');
+
+    assert.equal($.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
+  });
+
+  test('it allows signingAjaxSettings to be a computed property', function(assert) {
+    this.stub($, 'ajax');
+
+    assert.expect(2);
+
+    const uploader = S3Uploader.extend({
+      _testIterator: 0,
+
+      signingAjaxSettings: computed('_testIterator', function() {
+        return {
+          headers: {
+            'X-My-Incrementor': this.get('_testIterator'),
+          }
+        };
+      }),
+    }).create();
+
+    uploader.sign('/test');
+    assert.equal($.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
+
+    uploader.set('_testIterator', 1);
+    uploader.sign('/test');
+    assert.equal($.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
+  });
 });
