@@ -115,7 +115,7 @@ export default EmberUploader.FileField.extend({
   multiple: true,
   url: 'http://example.com/upload',
 
-  filesDidChange (files) {
+  filesDidChange(files) {
     const uploader = EmberUploader.Uploader.create({
       url: this.get('url')
     });
@@ -198,7 +198,7 @@ these tools installed if you would like to build Ember Uploader.
 $ npm install -g ember-cli
 ```
 
-To get started with development simply do a `npm install` inside the cloned
+To get started with development simply do a `npm install`/`yarn install` inside the cloned
 repository to install all dependencies needed for running
 [Ember CLI](http://www.ember-cli.com/). Afterwards you can run `ember build` which builds
 the library.
