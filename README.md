@@ -200,8 +200,7 @@ $ npm install -g ember-cli
 
 To get started with development simply do a `npm install`/`yarn install` inside the cloned
 repository to install all dependencies needed for running
-[Ember CLI](http://www.ember-cli.com/). Afterwards you can run `ember build` which builds
-the library.
+[Ember CLI](http://www.ember-cli.com/).
 
 Lint and test your code using: `ember test`.
 
