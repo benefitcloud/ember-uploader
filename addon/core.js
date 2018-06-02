@@ -1,3 +1,4 @@
+import Namespace from '@ember/application/namespace';
 import Ember   from 'ember';
 import VERSION from 'ember-uploader/version';
 
@@ -18,7 +19,7 @@ import VERSION from 'ember-uploader/version';
  * @static
  */
 
-const EmberUploader = Ember.Namespace.create({
+const EmberUploader = Namespace.create({
   VERSION
 });
 

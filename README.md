@@ -21,7 +21,7 @@ choose a file.
 import EmberUploader from 'ember-uploader';
 
 export default EmberUploader.FileField.extend({
-  filesDidChange: function(files) {
+  filesDidChange(files) {
     const uploader = EmberUploader.Uploader.create({
       url: this.get('url')
     });
@@ -115,7 +115,7 @@ export default EmberUploader.FileField.extend({
   multiple: true,
   url: 'http://example.com/upload',
 
-  filesDidChange (files) {
+  filesDidChange(files) {
     const uploader = EmberUploader.Uploader.create({
       url: this.get('url')
     });
@@ -161,7 +161,7 @@ import EmberUploader from 'ember-uploader';
 export default EmberUploader.FileField.extend({
   signingUrl: '',
 
-  filesDidChange (files) {
+  filesDidChange(files) {
     const uploader = EmberUploader.S3Uploader.create({
       signingUrl: this.get('signingUrl')
     });
@@ -191,23 +191,18 @@ In lieu of a formal styleguide, take care to maintain the existing coding
 style. Add unit tests for any new or changed functionality.
 
 Ember Uploader uses [node.js](http://nodejs.org) and
-[Ember CLI](http://www.ember-cli.com/) for builds and tests while using
-[bower](http://bower.io/) for dependency management. You will need to have
+[Ember CLI](https://ember-cli.com/) for builds and tests. You will need to have
 these tools installed if you would like to build Ember Uploader.
 
 ```sh
-$ npm install -g bower
 $ npm install -g ember-cli
 ```
 
-To get started with development simply do a `npm install` inside the cloned
+To get started with development simply do a `yarn install` inside the cloned
 repository to install all dependencies needed for running
-[Ember CLI](http://www.ember-cli.com/). This also executes `bower install` for
-the runtime dependencies. Afterwards you can run `ember build` which builds
-the library.
+[Ember CLI](http://www.ember-cli.com/).
 
-Lint and test your code using: `ember test`. For headless testing you should
-have [PhantomJS](http://phantomjs.org/) installed.
+Lint and test your code using: `ember test`.
 
 ## Thank you
 The Ember team, its contributors and community for being awesome. Also thank
