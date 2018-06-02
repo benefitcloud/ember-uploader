@@ -191,14 +191,14 @@ In lieu of a formal styleguide, take care to maintain the existing coding
 style. Add unit tests for any new or changed functionality.
 
 Ember Uploader uses [node.js](http://nodejs.org) and
-[Ember CLI](http://www.ember-cli.com/) for builds and tests. You will need to have
+[Ember CLI](https://ember-cli.com/) for builds and tests. You will need to have
 these tools installed if you would like to build Ember Uploader.
 
 ```sh
 $ npm install -g ember-cli
 ```
 
-To get started with development simply do a `npm install`/`yarn install` inside the cloned
+To get started with development simply do a `yarn install` inside the cloned
 repository to install all dependencies needed for running
 [Ember CLI](http://www.ember-cli.com/).
 
