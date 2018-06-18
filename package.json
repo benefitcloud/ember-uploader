@@ -1,7 +1,7 @@
 {
   "title": "Ember Uploader",
   "name": "ember-uploader",
-  "version": "1.3.2",
+  "version": "2.0.0",
   "description": "Ember.js addon to facilitate uploading",
   "homepage": "https://github.com/benefitcloud/ember-uploader",
   "license": "MIT",
