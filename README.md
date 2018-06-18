@@ -18,11 +18,12 @@ automatically give you an input field, and will set `files` property when you
 choose a file.
 
 ```js
-import EmberUploader from 'ember-uploader';
+import FileField from 'ember-uploader/components/file-field';
+import Uploader from 'ember-uploader/uploaders/uploader';
 
-export default EmberUploader.FileField.extend({
+export default FileField.extend({
   filesDidChange(files) {
-    const uploader = EmberUploader.Uploader.create({
+    const uploader = Uploader.create({
       url: this.get('url')
     });
 
@@ -44,7 +45,9 @@ By default, the request will be sent as `POST`. To override that, set `method` w
 creating the object:
 
 ```js
-const uploader = EmberUploader.Uploader.create({
+import Uploader from 'ember-uploader/uploaders/uploader';
+
+const uploader = Uploader.create({
   url: '/upload',
   method: 'PUT'
 });
@@ -53,7 +56,9 @@ const uploader = EmberUploader.Uploader.create({
 #### Change Namespace
 
 ```js
-const uploader = EmberUploader.Uploader.create({
+import Uploader from 'ember-uploader/uploaders/uploader';
+
+const uploader = Uploader.create({
   paramNamespace: 'post'
 });
 
@@ -64,7 +69,9 @@ const uploader = EmberUploader.Uploader.create({
 By default parameter will be `file`
 
 ```js
-const upload = EmberUploader.Uploader.create({
+import Uploader from 'ember-uploader/uploaders/uploader';
+
+const upload = Uploader.create({
   paramName: 'upload'
 });
 
@@ -109,14 +116,15 @@ uploader.upload(file).then(data => {
 
 #### Multiple files
 ```js
-import EmberUploader from 'ember-uploader';
+import FileField from 'ember-uploader/components/file-field';
+import Uploader from 'ember-uploader/uploaders/uploader';
 
-export default EmberUploader.FileField.extend({
+export default FileField.extend({
   multiple: true,
   url: 'http://example.com/upload',
 
   filesDidChange(files) {
-    const uploader = EmberUploader.Uploader.create({
+    const uploader = Uploader.create({
       url: this.get('url')
     });
 
@@ -135,9 +143,9 @@ settings required by Ember Uploader. Here we modify the headers sent with
 the request.
 
 ```js
-import EmberUploader from 'ember-uploader';
+import Uploader from 'ember-uploader/uploaders/uploader';
 
-export default EmberUploader.Uploader.extend({
+export default Uploader.extend({
   ajaxSettings: {
     headers: {
       'X-Application-Name': 'Uploader Test'
@@ -156,13 +164,14 @@ able to make an authenticated request to S3. This step is required to avoid
 saving secret token on your client.
 
 ```js
-import EmberUploader from 'ember-uploader';
+import FileField from 'ember-uploader/components/file-field';
+import Uploader from 'ember-uploader/uploaders/uploader';
 
-export default EmberUploader.FileField.extend({
+export default FileField.extend({
   signingUrl: '',
 
   filesDidChange(files) {
-    const uploader = EmberUploader.S3Uploader.create({
+    const uploader = S3Uploader.create({
       signingUrl: this.get('signingUrl')
     });
 

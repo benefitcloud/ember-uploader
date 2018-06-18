@@ -1,2 +1,1 @@
-import FileField from 'ember-uploader/components/file-field';
-export default FileField;
+export { default } from 'ember-uploader/components/file-field';

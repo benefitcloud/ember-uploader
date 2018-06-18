@@ -2,14 +2,14 @@ import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { computed } from '@ember/object';
 import $ from 'jquery';
-import { Uploader } from 'ember-uploader/uploaders';
+import Uploader from 'ember-uploader/uploaders/uploader';
 import test from 'ember-sinon-qunit/test-support/test';
 import TestableFormData from '../helpers/form-data';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 
 let file;
 
-module("EmberUploader.Uploader", function(hooks) {
+module('EmberUploader.Uploader', function(hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function() {

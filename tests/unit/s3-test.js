@@ -2,7 +2,7 @@ import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { computed } from '@ember/object';
 import $ from 'jquery';
-import { S3Uploader } from 'ember-uploader/uploaders';
+import S3Uploader from 'ember-uploader/uploaders/s3';
 import test from 'ember-sinon-qunit/test-support/test';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 
