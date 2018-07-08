@@ -137,10 +137,10 @@ export default FileField.extend({
 ```
 
 ### Modifying the request
-Ember uploader uses jQuery.ajax under the hood so it accepts the same
+Ember Uploader uses jQuery.ajax under the hood so it accepts the same
 ajax settings via the `ajaxSettings` property which is then merged with any
 settings required by Ember Uploader. Here we modify the headers sent with
-the request.
+the request. Note - S3 Uploader uses `signingAjaxSettings` as the relevant key.
 
 ```js
 import Uploader from 'ember-uploader/uploaders/uploader';
@@ -165,14 +165,19 @@ saving secret token on your client.
 
 ```js
 import FileField from 'ember-uploader/components/file-field';
-import Uploader from 'ember-uploader/uploaders/uploader';
+import S3Uploader from 'ember-uploader/uploaders/s3';
 
 export default FileField.extend({
   signingUrl: '',
 
   filesDidChange(files) {
     const uploader = S3Uploader.create({
-      signingUrl: this.get('signingUrl')
+      signingUrl: this.get('signingUrl'),
+      signingAjaxSettings: {
+        headers: {
+          'X-Application-Name': 'Uploader Test'
+        }
+      }
     });
 
     uploader.on('didUpload', response => {
