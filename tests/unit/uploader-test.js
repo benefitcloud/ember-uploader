@@ -85,7 +85,7 @@ module('EmberUploader.Uploader', function(hooks) {
   });
 
   test("uploads to the given url", function(assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     let uploader = Uploader.extend({
       url: '/upload',
@@ -93,6 +93,10 @@ module('EmberUploader.Uploader', function(hooks) {
     }).create();
 
     uploader.on('didUpload', function(data) {
+      assert.ok(true);
+    });
+
+    uploader.on('didUpload.withHeaders', function(data) {
       assert.ok(true);
     });
 

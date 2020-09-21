@@ -95,6 +95,12 @@ uploader.on('didUpload', e => {
 });
 ```
 
+```js
+uploader.on('didUpload.withHeaders', e => {
+  // Handle finished upload
+});
+```
+
 #### Failed Uploading
 
 ```js
