@@ -53,7 +53,9 @@ const uploader = Uploader.create({
 });
 ```
 
-#### Change Namespace
+* `yarn lint:hbs`
+* `yarn lint:js`
+* `yarn lint:js --fix`
 
 ```js
 import Uploader from 'ember-uploader/uploaders/uploader';

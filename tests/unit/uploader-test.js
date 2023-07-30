@@ -15,14 +15,7 @@ module('EmberUploader.Uploader', function(hooks) {
   hooks.beforeEach(function() {
     this.server = startMirage();
 
-    if (typeof WebKitBlobBuilder === "undefined") {
-      file = new Blob(['test'], { type: 'text/plain' });
-    } else {
-      const builder = new WebKitBlobBuilder();
-      builder.append('test');
-      file = builder.getBlob();
-    }
-
+    file = new Blob(['test'], { type: 'text/plain' });
     TestableFormData.inject();
   });
 
@@ -92,7 +85,7 @@ module('EmberUploader.Uploader', function(hooks) {
       file: file
     }).create();
 
-    uploader.on('didUpload', function(data) {
+    uploader.on('didUpload', function() {
       assert.ok(true);
     });
 
@@ -107,7 +100,7 @@ module('EmberUploader.Uploader', function(hooks) {
       file: file
     }).create();
 
-    uploader.upload(file).then(function(data) {
+    uploader.upload(file).then(function() {
       assert.ok(true);
     });
   });
@@ -120,8 +113,8 @@ module('EmberUploader.Uploader', function(hooks) {
       file: file
     }).create();
 
-    uploader.upload(file).then(function(data) {
-    }, function(data) {
+    uploader.upload(file).then(function() {
+    }, function() {
       assert.ok(true);
     });
   });
@@ -148,7 +141,7 @@ module('EmberUploader.Uploader', function(hooks) {
       file: file
     }).create();
 
-    uploader.on('progress', function(e) {
+    uploader.on('progress', function() {
       assert.ok(true, 'progress event was emitted');
     });
 

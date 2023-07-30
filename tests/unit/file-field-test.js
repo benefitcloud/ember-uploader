@@ -1,6 +1,5 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import FileField from 'dummy/components/file-field';
 
 module('EmberUploader.FileField', function(hooks) {
   setupTest(hooks);

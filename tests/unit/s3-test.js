@@ -14,14 +14,7 @@ module('EmberUploader.S3Uploader', function(hooks) {
   hooks.beforeEach(function() {
     this.server = startMirage();
 
-    if (typeof WebKitBlobBuilder === 'undefined') {
-      file = new Blob(['test'], { type: 'text/plain' });
-    } else {
-      const builder = new WebKitBlobBuilder();
-      builder.append('test');
-      file = builder.getBlob();
-    }
-
+    file = new Blob(['test'], { type: 'text/plain' });
     file.mime = 'text/plain';
     file.name = 'test.txt';
   });
@@ -75,7 +68,7 @@ module('EmberUploader.S3Uploader', function(hooks) {
       file: file
     });
 
-    uploader.on('didSign', function(data) {
+    uploader.on('didSign', function() {
       assert.ok(true, 'didUpload callback was called');
     });
 
