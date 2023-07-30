@@ -1,5 +1,5 @@
 import { Promise } from 'rsvp';
-import $ from 'jquery';
+import jQuery from 'jquery';
 import { assign } from '@ember/polyfills';
 import Evented from '@ember/object/evented';
 import EmberObject, { set, get } from '@ember/object';
@@ -184,7 +184,7 @@ export default EmberObject.extend(Evented, {
         contentType: false,
         processData: false,
         xhr: () => {
-          const xhr = $.ajaxSettings.xhr();
+          const xhr = jQuery.ajaxSettings.xhr();
           xhr.upload.onprogress = (event) => {
             this.didProgress(event);
           };
@@ -218,7 +218,7 @@ export default EmberObject.extend(Evented, {
         run(null, reject, this.didError(jqXHR, responseText, errorThrown));
       };
 
-      $.ajax(settings);
+      jQuery.ajax(settings);
     });
   }
 });

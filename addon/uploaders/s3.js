@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import jQuery from 'jquery';
 import { Promise } from 'rsvp';
 import { set, get } from '@ember/object';
 import { run } from '@ember/runloop';
@@ -96,7 +96,7 @@ export default Uploader.extend({
         run(null, reject, this.didErrorOnSign(jqXHR, responseText, errorThrown));
       };
 
-      $.ajax(settings);
+      jQuery.ajax(settings);
     });
   },
 

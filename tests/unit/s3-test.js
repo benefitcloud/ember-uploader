@@ -1,7 +1,7 @@
 import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { computed } from '@ember/object';
-import $ from 'jquery';
+import jQuery from 'jquery';
 import S3Uploader from 'ember-uploader/uploaders/s3';
 import test from 'ember-sinon-qunit/test-support/test';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
@@ -76,7 +76,7 @@ module('EmberUploader.S3Uploader', function(hooks) {
   });
 
   test('it allows overriding ajax sign settings', function(assert) {
-    this.stub($, 'ajax');
+    this.stub(jQuery, 'ajax');
 
     assert.expect(1);
 
@@ -92,11 +92,11 @@ module('EmberUploader.S3Uploader', function(hooks) {
 
     uploader.sign('/test');
 
-    assert.equal($.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
+    assert.equal(jQuery.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
   });
 
   test('it allows signingAjaxSettings to be a computed property', function(assert) {
-    this.stub($, 'ajax');
+    this.stub(jQuery, 'ajax');
 
     assert.expect(2);
 
@@ -113,10 +113,10 @@ module('EmberUploader.S3Uploader', function(hooks) {
     }).create();
 
     uploader.sign('/test');
-    assert.equal($.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
+    assert.equal(jQuery.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
 
     uploader.set('_testIterator', 1);
     uploader.sign('/test');
-    assert.equal($.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
+    assert.equal(jQuery.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
   });
 });
