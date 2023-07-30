@@ -3,9 +3,17 @@
 An Ember.js file uploader that works with any browser that supports
 [FormData](http://caniuse.com/#search=FormData).
 
-## Getting Started
+=======
 
-Ember Uploader is a Ember CLI compatible addon and can be installed as such.
+Compatibility
+------------------------------------------------------------------------------
+
+* Ember.js v2.18 or above
+* Ember CLI v2.13 or above
+
+
+Installation
+------------------------------------------------------------------------------
 
 ```
 ember install ember-uploader
@@ -202,31 +210,22 @@ export default FileField.extend({
 For learning how to setup the backend, check the
 [wiki](https://github.com/benefitcloud/ember-uploader/wiki/S3-Server-Setup)
 
+
 ## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding
-style. Add unit tests for any new or changed functionality.
 
-Ember Uploader uses [node.js](http://nodejs.org) and
-[Ember CLI](https://ember-cli.com/) for builds and tests. You will need to have
-these tools installed if you would like to build Ember Uploader.
+See the [Contributing](CONTRIBUTING.md) guide for details.
 
-```sh
-$ npm install -g ember-cli
-```
 
-To get started with development simply do a `yarn install` inside the cloned
-repository to install all dependencies needed for running
-[Ember CLI](http://www.ember-cli.com/).
+## License
 
-Lint and test your code using: `ember test`.
+Copyright (c) 2014 Joshua Borton
+Licensed under the MIT license.
+
 
 ## Thank you
+
 The Ember team, its contributors and community for being awesome. Also thank
 you to [Erik Bryn](http://twitter.com/ebryn) and the contributors behind
 [ember-model](http://github.com/ebryn/ember-model) as well as
 [TJ Holowaychuk](http://twitter.com/tjholowaychuk) for
 [component/upload](http://github.com/component/upload).
-
-## License
-Copyright (c) 2014 Joshua Borton
-Licensed under the MIT license.
