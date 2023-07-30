@@ -151,7 +151,7 @@ module('EmberUploader.Uploader', function(hooks) {
     await settled();
   });
 
-  test("it can receive extra data", function(assert) {
+  test("it can receive extra data", async function(assert) {
     assert.expect(1);
 
     let data = { test: 'valid' };
@@ -165,6 +165,8 @@ module('EmberUploader.Uploader', function(hooks) {
     }).create();
 
     uploader.upload(file, data);
+
+    await settled();
   });
 
   test("it allows overriding ajax settings", function(assert) {
