@@ -1,24 +1,22 @@
+import EmberObject from '@ember/object';
 import { Promise } from 'rsvp';
 import jQuery from 'jquery';
-import { assign } from '@ember/polyfills';
-import Evented from '@ember/object/evented';
-import EmberObject, { set, get } from '@ember/object';
 import { run } from '@ember/runloop';
+import { on } from '@ember/object/evented';
+import { sendEvent } from '@ember/object/events';
 
-export default EmberObject.extend(Evented, {
+export default class Uploader extends EmberObject {
   /**
    * Target url to upload to
    *
    * @property url
    */
-  url: null,
 
   /**
    * ajax request method, by default it will be POST
    *
    * @property method
    */
-  method: 'POST',
 
   /**
    * Used to define a namespace for the file param and any extra data params
@@ -26,14 +24,12 @@ export default EmberObject.extend(Evented, {
    *
    * @property paramNamespace
    */
-  paramNamespace: null,
 
   /**
    * The parameter name for the file(s) to be uploaded
    *
    * @property paramName
    */
-  paramName: 'file',
 
   /**
    * Boolean property changed to true upon upload start and false upon upload
@@ -41,7 +37,14 @@ export default EmberObject.extend(Evented, {
    *
    * @property isUploading
    */
-  isUploading: false,
+  constructor() {
+    super(...arguments);
+    this.url = this.url || null;
+    this.method = this.method || 'POST';
+    this.paramNamespace = this.paramNamespace || null;
+    this.paramName = this.paramName || 'file';
+    this.isUploading = false;
+  }
 
   /**
    * Start upload of file(s) and any extra data
@@ -53,13 +56,10 @@ export default EmberObject.extend(Evented, {
    */
   upload (files, extra = {}) {
     const data   = this.createFormData(files, extra);
-    const url    = get(this, 'url');
-    const method = get(this, 'method');
+    this.isUploading = true;
 
-    set(this, 'isUploading', true);
-
-    return this.ajax(url, data, method);
-  },
+    return this.ajax(this.url, data, this.method);
+  }
 
   /**
    * Creates the FormData object with the file(s) and any extra data
@@ -93,7 +93,7 @@ export default EmberObject.extend(Evented, {
     }
 
     return formData;
-  },
+  }
 
   /**
    * Returns the param name namespaced if a namespace exists
@@ -105,7 +105,7 @@ export default EmberObject.extend(Evented, {
     return this.paramNamespace ?
       `${this.paramNamespace}[${name}]` :
       name;
-  },
+  }
 
   /**
    * Triggers didUpload event with given params and sets isUploading to false
@@ -114,10 +114,10 @@ export default EmberObject.extend(Evented, {
    * @return {object} Returns the given data
    */
   didUpload (data) {
-    set(this, 'isUploading', false);
-    this.trigger('didUpload', data);
+    this.isUploading = false;
+    sendEvent(this, 'didUpload', data);
     return data;
-  },
+  }
 
   /**
    * Triggers didError event with given params and sets isUploading to false
@@ -128,7 +128,7 @@ export default EmberObject.extend(Evented, {
    * @return {object} Returns the jQuery XMLHttpRequest
    */
   didError (jqXHR, textStatus, errorThrown) {
-    set(this, 'isUploading', false);
+    this.isUploading = false;
 
     // Borrowed from Ember Data
     const isObject = jqXHR !== null && typeof jqXHR === 'object';
@@ -144,10 +144,10 @@ export default EmberObject.extend(Evented, {
       }
     }
 
-    this.trigger('didError', jqXHR, textStatus, errorThrown);
+    sendEvent(this, 'didError', [jqXHR, textStatus, errorThrown]);
 
     return jqXHR;
-  },
+  }
 
   /**
    * Triggers progress event supplying event with current percent
@@ -156,16 +156,16 @@ export default EmberObject.extend(Evented, {
    */
   didProgress (event) {
     event.percent = event.loaded / event.total * 100;
-    this.trigger('progress', event);
-  },
+    sendEvent(this, 'progress', event);
+  }
 
   /**
    * Triggers isAborting event and sets isUploading to false
    */
   abort () {
-    set(this, 'isUploading', false);
-    this.trigger('isAborting');
-  },
+    this.isUploading = false;
+    sendEvent(this, 'isAborting');
+  }
 
   /**
    * Starts a request to the given url sending the supplied data using the
@@ -178,7 +178,7 @@ export default EmberObject.extend(Evented, {
    * object
    */
   ajax (url, data = {}, method = this.method) {
-    const ajaxSettings = assign(
+    const ajaxSettings = Object.assign(
       {},
       {
         contentType: false,
@@ -188,18 +188,18 @@ export default EmberObject.extend(Evented, {
           xhr.upload.onprogress = (event) => {
             this.didProgress(event);
           };
-          this.one('isAborting', () => xhr.abort());
+          on('isAborting', () => xhr.abort());
           return xhr;
         },
         url,
         data,
         method
       },
-      get(this, 'ajaxSettings')
+      this.ajaxSettings
     );
 
     return this.ajaxPromise(ajaxSettings);
-  },
+  }
 
   /**
    * Starts a request using the supplied settings returning a
@@ -221,4 +221,4 @@ export default EmberObject.extend(Evented, {
       jQuery.ajax(settings);
     });
   }
-});
+}

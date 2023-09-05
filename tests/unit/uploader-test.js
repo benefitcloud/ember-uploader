@@ -1,11 +1,12 @@
 import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { computed } from '@ember/object';
+import { on } from '@ember/object/evented';
 import jQuery from 'jquery';
-import Uploader from 'ember-uploader/uploaders/uploader';
 import test from 'ember-sinon-qunit/test-support/test';
-import TestableFormData from '../helpers/form-data';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
+import TestableFormData from '../helpers/form-data';
+import Uploader from 'ember-uploader/uploaders/uploader';
 
 let file;
 
@@ -82,12 +83,11 @@ module('EmberUploader.Uploader', function(hooks) {
 
     let uploader = Uploader.extend({
       url: '/upload',
-      file: file
+      file: file,
+      uploaded: on('didUpload', function() {
+        assert.ok(true);
+      }),
     }).create();
-
-    uploader.on('didUpload', function() {
-      assert.ok(true);
-    });
 
     uploader.upload(file);
   });
@@ -136,17 +136,16 @@ module('EmberUploader.Uploader', function(hooks) {
 
     server.timing = 100;
 
-    let uploader = Uploader.extend({
-      url: '/upload',
-      file: file
-    }).create();
-
     var done = assert.async();
 
-    uploader.on('progress', function() {
-      assert.ok(true, 'progress event was emitted');
-      done();
-    });
+    let uploader = Uploader.extend({
+      url: '/upload',
+      file: file,
+      progressed: on('progress', function() {
+        assert.ok(true, 'progress event was emitted');
+        done();
+      }),
+    }).create();
 
     uploader.upload(file);
   });

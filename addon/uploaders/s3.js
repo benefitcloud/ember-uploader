@@ -1,24 +1,21 @@
-import jQuery from 'jquery';
 import { Promise } from 'rsvp';
-import { set, get } from '@ember/object';
+import jQuery from 'jquery';
 import { run } from '@ember/runloop';
-import Uploader from 'ember-uploader/uploaders/uploader';
-import { assign } from '@ember/polyfills';
+import { sendEvent } from '@ember/object/events';
+import Uploader from './uploader';
 
-export default Uploader.extend({
+export default class S3Uploader extends Uploader {
   /**
    * Target url used to request a signed upload policy
    *
    * @property url
    */
-  signingUrl: '/sign',
 
   /**
    * request method for signing
    *
    * @property method
    */
-  signingMethod: 'GET',
 
   /**
    * Boolean property changed to true upon signing start and false upon
@@ -26,7 +23,12 @@ export default Uploader.extend({
    *
    * @property isSigning
    */
-  isSigning: false,
+  constructor() {
+    super(...arguments);
+    this.signingUrl = this.signingUrl || '/sign';
+    this.signingMethod = this.signingMethod || 'GET';
+    this.isSigning = false;
+  }
 
   /**
    * Request signed upload policy and upload file(s) and any extra data
@@ -40,7 +42,7 @@ export default Uploader.extend({
     return this.sign(file, extra).then((json) => {
       let url;
 
-      set(this, 'isUploading', true);
+      this.isUploading = true;
 
       if (json.endpoint) {
         url = json.endpoint;
@@ -54,7 +56,7 @@ export default Uploader.extend({
 
       return this.ajax(url, this.createFormData(file, json));
     });
-  },
+  }
 
   /**
    * Request signed upload policy
@@ -65,15 +67,15 @@ export default Uploader.extend({
    * request object
    */
   sign(file, extra = {}) {
-    const url    = get(this, 'signingUrl');
-    const method = get(this, 'signingMethod');
-    const signingAjaxSettings = get(this, 'signingAjaxSettings');
+    const url    = this.signingUrl;
+    const method = this.signingMethod;
+    const signingAjaxSettings = this.signingAjaxSettings;
 
     extra.name = file.name;
     extra.type = file.type;
     extra.size = file.size;
 
-    const settings = assign(
+    const settings = Object.assign(
       {},
       {
         contentType: 'application/json',
@@ -85,7 +87,7 @@ export default Uploader.extend({
       signingAjaxSettings,
     );
 
-    set(this, 'isSigning', true);
+    this.isSigning = true;
 
     return new Promise((resolve, reject) => {
       settings.success = (json) => {
@@ -98,7 +100,7 @@ export default Uploader.extend({
 
       jQuery.ajax(settings);
     });
-  },
+  }
 
   /**
    * Triggers didErrorOnSign event and sets isSigning to false
@@ -109,11 +111,11 @@ export default Uploader.extend({
    * @return {object} Returns the jQuery XMLHttpRequest
    */
   didErrorOnSign(jqXHR, textStatus, errorThrown) {
-    set(this, 'isSigning', false);
-    this.trigger('didErrorOnSign');
+    this.isSigning = false;
+    sendEvent(this, 'didErrorOnSign');
     this.didError(jqXHR, textStatus, errorThrown);
     return jqXHR;
-  },
+  }
 
   /**
    * Triggers didSign event and returns the signing response
@@ -122,7 +124,7 @@ export default Uploader.extend({
    * @return {object} The signing response
    */
   didSign(response) {
-    this.trigger('didSign', response);
+    sendEvent(this, 'didSign', response);
     return response;
   }
-});
+}

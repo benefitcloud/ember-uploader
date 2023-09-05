@@ -1,10 +1,11 @@
 import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { computed } from '@ember/object';
+import { on } from '@ember/object/evented';
 import jQuery from 'jquery';
-import S3Uploader from 'ember-uploader/uploaders/s3';
 import test from 'ember-sinon-qunit/test-support/test';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
+import S3Uploader from 'ember-uploader/uploaders/s3';
 
 let file;
 
@@ -33,7 +34,7 @@ module('EmberUploader.S3Uploader', function(hooks) {
     assert.equal(uploader.signingUrl, '/api/signed-url');
   });
 
-  test('it uploads after signing', function(assert) {
+  test('it uploads after signing', async function(assert) {
     assert.expect(1);
 
     let uploader = S3Uploader.extend({
@@ -42,7 +43,7 @@ module('EmberUploader.S3Uploader', function(hooks) {
       }
     }).create();
 
-    uploader.upload(file);
+    await uploader.upload(file);
   });
 
   test('it has default sign request type as "GET"', function(assert) {
@@ -65,11 +66,10 @@ module('EmberUploader.S3Uploader', function(hooks) {
     assert.expect(1);
 
     let uploader = S3Uploader.create({
-      file: file
-    });
-
-    uploader.on('didSign', function() {
-      assert.ok(true, 'didUpload callback was called');
+      file: file,
+      didSign: on('didSign', function() {
+        assert.ok(true, 'didUpload callback was called');
+      }),
     });
 
     await uploader.upload(file);
