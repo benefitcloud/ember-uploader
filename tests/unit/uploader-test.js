@@ -1,6 +1,5 @@
 import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { settled } from '@ember/test-helpers';
 import { computed } from '@ember/object';
 import jQuery from 'jquery';
 import Uploader from 'ember-uploader/uploaders/uploader';
@@ -142,13 +141,14 @@ module('EmberUploader.Uploader', function(hooks) {
       file: file
     }).create();
 
+    var done = assert.async();
+
     uploader.on('progress', function() {
       assert.ok(true, 'progress event was emitted');
+      done();
     });
 
     uploader.upload(file);
-
-    await settled();
   });
 
   test("it can receive extra data", async function(assert) {
@@ -165,8 +165,6 @@ module('EmberUploader.Uploader', function(hooks) {
     }).create();
 
     uploader.upload(file, data);
-
-    await settled();
   });
 
   test("it allows overriding ajax settings", function(assert) {
@@ -175,11 +173,15 @@ module('EmberUploader.Uploader', function(hooks) {
     assert.expect(1);
 
     let uploader = Uploader.extend({
-      ajaxSettings: {
-        headers: {
-          'Content-Type': 'text/html'
+      init(...args) {
+        this._super(...args);
+
+        this.ajaxSettings = {
+          headers: {
+            'Content-Type': 'text/html'
+          }
         }
-      }
+      },
     }).create();
 
     uploader.upload(file);
