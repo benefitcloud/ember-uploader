@@ -1,8 +1,5 @@
 import EmberObject from '@ember/object';
 import { Promise } from 'rsvp';
-import jQuery from 'jquery';
-import { run } from '@ember/runloop';
-import { on } from '@ember/object/evented';
 import { sendEvent } from '@ember/object/events';
 
 export default class Uploader extends EmberObject {
@@ -43,6 +40,7 @@ export default class Uploader extends EmberObject {
     this.method = this.method || 'POST';
     this.paramNamespace = this.paramNamespace || null;
     this.paramName = this.paramName || 'file';
+    this.xhrSettings = this.xhrSettings || {};
     this.isUploading = false;
   }
 
@@ -58,7 +56,7 @@ export default class Uploader extends EmberObject {
     const data   = this.createFormData(files, extra);
     this.isUploading = true;
 
-    return this.ajax(this.url, data, this.method);
+    return this.makeRequest(this.url, data, this.method);
   }
 
   /**
@@ -113,7 +111,7 @@ export default class Uploader extends EmberObject {
    * @param {object} data Object of data supplied to the didUpload event
    * @return {object} Returns the given data
    */
-  didUpload (data) {
+  didUpload(data) {
     this.isUploading = false;
     sendEvent(this, 'didUpload', data);
     return data;
@@ -127,26 +125,11 @@ export default class Uploader extends EmberObject {
    * @param {object} errorThrown The error caused
    * @return {object} Returns the jQuery XMLHttpRequest
    */
-  didError (jqXHR, textStatus, errorThrown) {
+  didError(response) {
     this.isUploading = false;
+    sendEvent(this, 'didError', response);
 
-    // Borrowed from Ember Data
-    const isObject = jqXHR !== null && typeof jqXHR === 'object';
-
-    if (isObject) {
-      jqXHR.then = null;
-      if (!jqXHR.errorThrown) {
-        if (typeof errorThrown === 'string') {
-          jqXHR.errorThrown = new Error(errorThrown);
-        } else {
-          jqXHR.errorThrown = errorThrown;
-        }
-      }
-    }
-
-    sendEvent(this, 'didError', [jqXHR, textStatus, errorThrown]);
-
-    return jqXHR;
+    return response;
   }
 
   /**
@@ -154,7 +137,7 @@ export default class Uploader extends EmberObject {
    *
    * @param {object} event Event from xhr onprogress
    */
-  didProgress (event) {
+  didProgress(event) {
     event.percent = event.loaded / event.total * 100;
     sendEvent(this, 'progress', event);
   }
@@ -162,7 +145,7 @@ export default class Uploader extends EmberObject {
   /**
    * Triggers isAborting event and sets isUploading to false
    */
-  abort () {
+  abort() {
     this.isUploading = false;
     sendEvent(this, 'isAborting');
   }
@@ -177,28 +160,62 @@ export default class Uploader extends EmberObject {
    * @return {object} Returns a Ember.RSVP.Promise wrapping the ajax request
    * object
    */
-  ajax (url, data = {}, method = this.method) {
-    const ajaxSettings = Object.assign(
-      {},
-      {
-        contentType: false,
-        processData: false,
-        xhr: () => {
-          const xhr = jQuery.ajaxSettings.xhr();
-          xhr.upload.onprogress = (event) => {
-            this.didProgress(event);
-          };
-          on('isAborting', () => xhr.abort());
-          return xhr;
-        },
-        url,
-        data,
-        method
-      },
-      this.ajaxSettings
-    );
+  async makeRequest(url, body = {}, method = this.method) {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
 
-    return this.ajaxPromise(ajaxSettings);
+      xhr.upload.onprogress = (event) => {
+        this.didProgress(event);
+      };
+
+      xhr.open(method, url, true);
+
+      if ('headers' in this.xhrSettings) {
+        for (const [key, value] of Object.entries(this.xhrSettings.headers)) {
+          xhr.setRequestHeader(key, value);
+        }
+      }
+
+      xhr.onload = () => {
+        let responseBody = this.formatResponse(xhr);
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(this.didUpload(responseBody));
+        } else {
+          reject(this.didError({
+            status: xhr.status,
+            statusText: xhr.statusText,
+            responseBody
+          }));
+        }
+      }
+
+      xhr.onerror = () => {
+        let responseBody = this.formatResponse(xhr);
+
+        reject(this.didError({
+          status: xhr.status,
+          statusText: xhr.statusText,
+          responseBody
+        }));
+      }
+
+      xhr.send(body);
+    });
+  }
+
+  formatResponse(xhr) {
+    let type = xhr.responseHeaders['Content-Type'];
+
+    if (type.includes('json')) {
+      return JSON.parse(xhr.responseText);
+    }
+
+    if (type.includes('xml')) {
+      return xhr.responseXML;
+    }
+
+    return xhr.responseText;
   }
 
   /**
@@ -208,17 +225,17 @@ export default class Uploader extends EmberObject {
    * @param {object} settings The jQuery.ajax compatible settings object
    * @return {object} Returns a Ember.RSVP.Promise wrapping the ajax request
    */
-  ajaxPromise (settings) {
-    return new Promise((resolve, reject) => {
-      settings.success = (data) => {
-        run(null, resolve, this.didUpload(data));
-      };
+  // ajaxPromise (settings) {
+  //   return new Promise((resolve, reject) => {
+  //     settings.success = (data) => {
+  //       run(null, resolve, this.didUpload(data));
+  //     };
 
-      settings.error = (jqXHR, responseText, errorThrown) => {
-        run(null, reject, this.didError(jqXHR, responseText, errorThrown));
-      };
+  //     settings.error = (jqXHR, responseText, errorThrown) => {
+  //       run(null, reject, this.didError(jqXHR, responseText, errorThrown));
+  //     };
 
-      jQuery.ajax(settings);
-    });
-  }
+  //     jQuery.ajax(settings);
+  //   });
+  // }
 }

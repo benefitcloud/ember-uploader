@@ -1,8 +1,6 @@
 import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { computed } from '@ember/object';
 import { on } from '@ember/object/evented';
-import jQuery from 'jquery';
 import test from 'ember-sinon-qunit/test-support/test';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
 import TestableFormData from '../helpers/form-data';
@@ -164,52 +162,5 @@ module('EmberUploader.Uploader', function(hooks) {
     }).create();
 
     uploader.upload(file, data);
-  });
-
-  test("it allows overriding ajax settings", function(assert) {
-    this.stub(jQuery, 'ajax');
-
-    assert.expect(1);
-
-    let uploader = Uploader.extend({
-      init(...args) {
-        this._super(...args);
-
-        this.ajaxSettings = {
-          headers: {
-            'Content-Type': 'text/html'
-          }
-        }
-      },
-    }).create();
-
-    uploader.upload(file);
-
-    assert.equal(jQuery.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
-  });
-
-  test("it allows ajaxSettings to be a computed property", function(assert) {
-    this.stub(jQuery, 'ajax');
-
-    assert.expect(2);
-
-    let uploader = Uploader.extend({
-      _testIterator: 0,
-
-      ajaxSettings: computed('_testIterator', function() {
-        return {
-          headers: {
-            'X-My-Incrementor': this.get('_testIterator'),
-          }
-        };
-      }),
-    }).create();
-
-    uploader.upload(file);
-    assert.equal(jQuery.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
-
-    uploader.set('_testIterator', 1);
-    uploader.upload(file);
-    assert.equal(jQuery.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
   });
 });

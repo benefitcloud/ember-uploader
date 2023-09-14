@@ -1,6 +1,4 @@
 import { Promise } from 'rsvp';
-import jQuery from 'jquery';
-import { run } from '@ember/runloop';
 import { sendEvent } from '@ember/object/events';
 import Uploader from './uploader';
 
@@ -27,6 +25,7 @@ export default class S3Uploader extends Uploader {
     super(...arguments);
     this.signingUrl = this.signingUrl || '/sign';
     this.signingMethod = this.signingMethod || 'GET';
+    this.signingXhrSettings = this.signingXhrSettings || {};
     this.isSigning = false;
   }
 
@@ -54,7 +53,7 @@ export default class S3Uploader extends Uploader {
         url = `https://${json.bucket}.s3.amazonaws.com`;
       }
 
-      return this.ajax(url, this.createFormData(file, json));
+      return this.makeRequest(url, this.createFormData(file, json));
     });
   }
 
@@ -67,38 +66,55 @@ export default class S3Uploader extends Uploader {
    * request object
    */
   sign(file, extra = {}) {
-    const url    = this.signingUrl;
-    const method = this.signingMethod;
-    const signingAjaxSettings = this.signingAjaxSettings;
+    let url    = this.signingUrl;
+    let method = this.signingMethod;
 
     extra.name = file.name;
     extra.type = file.type;
     extra.size = file.size;
 
-    const settings = Object.assign(
-      {},
-      {
-        contentType: 'application/json',
-        dataType: 'json',
-        data: method.match(/get/i) ? extra : JSON.stringify(extra),
-        method,
-        url
-      },
-      signingAjaxSettings,
-    );
+    let data = method.match(/get/i) ? extra : JSON.stringify(extra);
 
     this.isSigning = true;
 
     return new Promise((resolve, reject) => {
-      settings.success = (json) => {
-        run(null, resolve, this.didSign(json));
-      };
+      let xhr = new XMLHttpRequest();
 
-      settings.error = (jqXHR, responseText, errorThrown) => {
-        run(null, reject, this.didErrorOnSign(jqXHR, responseText, errorThrown));
-      };
+      xhr.open(method, url, true);
 
-      jQuery.ajax(settings);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      if ('headers' in this.signingXhrSettings) {
+        for (const [key, value] of Object.entries(this.signingXhrSettings.headers)) {
+          xhr.setRequestHeader(key, value);
+        }
+      }
+
+      xhr.onload = () => {
+        let responseBody = this.formatResponse(xhr);
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(this.didSign(responseBody));
+        } else {
+          reject(this.didErrorOnSign({
+            status: xhr.status,
+            statusText: xhr.statusText,
+            responseBody
+          }));
+        }
+      }
+
+      xhr.onerror = () => {
+        let responseBody = this.formatResponse(xhr);
+
+        reject(this.didErrorOnSign({
+          status: xhr.status,
+          statusText: xhr.statusText,
+          responseBody
+        }));
+      }
+
+      xhr.send(data);
     });
   }
 
@@ -110,11 +126,11 @@ export default class S3Uploader extends Uploader {
    * @param {object} errorThrown The error caused
    * @return {object} Returns the jQuery XMLHttpRequest
    */
-  didErrorOnSign(jqXHR, textStatus, errorThrown) {
+  didErrorOnSign(response) {
     this.isSigning = false;
     sendEvent(this, 'didErrorOnSign');
-    this.didError(jqXHR, textStatus, errorThrown);
-    return jqXHR;
+    this.didError(response);
+    return response;
   }
 
   /**
