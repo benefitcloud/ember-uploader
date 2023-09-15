@@ -52,7 +52,7 @@ export default class Uploader extends EmberObject {
    * @return {object} Returns a Ember.RSVP.Promise wrapping the ajax request
    * object
    */
-  upload (files, extra = {}) {
+  upload(files, extra = {}) {
     const data   = this.createFormData(files, extra);
     this.isUploading = true;
 
@@ -67,7 +67,7 @@ export default class Uploader extends EmberObject {
    * @return {object} Returns a FormData object with the supplied file(s) and
    * extra data
    */
-  createFormData (files, extra = {}) {
+  createFormData(files, extra = {}) {
     const formData = new FormData();
 
     for (const prop in extra) {
@@ -99,7 +99,7 @@ export default class Uploader extends EmberObject {
    * @param {string} name The param name to namespace
    * @return {string} Returns the namespaced param
    */
-  toNamespacedParam (name) {
+  toNamespacedParam(name) {
     return this.paramNamespace ?
       `${this.paramNamespace}[${name}]` :
       name;
@@ -113,7 +113,7 @@ export default class Uploader extends EmberObject {
    */
   didUpload(data) {
     this.isUploading = false;
-    sendEvent(this, 'didUpload', data);
+    sendEvent(this, 'didUpload', [data]);
     return data;
   }
 
@@ -127,7 +127,7 @@ export default class Uploader extends EmberObject {
    */
   didError(response) {
     this.isUploading = false;
-    sendEvent(this, 'didError', response);
+    sendEvent(this, 'didError', [response]);
 
     return response;
   }
@@ -139,7 +139,7 @@ export default class Uploader extends EmberObject {
    */
   didProgress(event) {
     event.percent = event.loaded / event.total * 100;
-    sendEvent(this, 'progress', event);
+    sendEvent(this, 'progress', [event]);
   }
 
   /**
@@ -160,7 +160,7 @@ export default class Uploader extends EmberObject {
    * @return {object} Returns a Ember.RSVP.Promise wrapping the ajax request
    * object
    */
-  async makeRequest(url, body = {}, method = this.method) {
+  makeRequest(url, body = {}, method = this.method) {
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
 
@@ -205,7 +205,11 @@ export default class Uploader extends EmberObject {
   }
 
   formatResponse(xhr) {
-    let type = xhr.responseHeaders['Content-Type'];
+    let type = xhr.getResponseHeader('Content-Type');
+
+    if (typeof type !== 'string') {
+      return xhr;
+    }
 
     if (type.includes('json')) {
       return JSON.parse(xhr.responseText);
@@ -217,25 +221,4 @@ export default class Uploader extends EmberObject {
 
     return xhr.responseText;
   }
-
-  /**
-   * Starts a request using the supplied settings returning a
-   * Ember.RSVP.Promise wrapping the ajax request
-   *
-   * @param {object} settings The jQuery.ajax compatible settings object
-   * @return {object} Returns a Ember.RSVP.Promise wrapping the ajax request
-   */
-  // ajaxPromise (settings) {
-  //   return new Promise((resolve, reject) => {
-  //     settings.success = (data) => {
-  //       run(null, resolve, this.didUpload(data));
-  //     };
-
-  //     settings.error = (jqXHR, responseText, errorThrown) => {
-  //       run(null, reject, this.didError(jqXHR, responseText, errorThrown));
-  //     };
-
-  //     jQuery.ajax(settings);
-  //   });
-  // }
 }

@@ -81,7 +81,6 @@ module('EmberUploader.Uploader', function(hooks) {
 
     let uploader = Uploader.extend({
       url: '/upload',
-      file: file,
       uploaded: on('didUpload', function() {
         assert.ok(true);
       }),
@@ -94,8 +93,7 @@ module('EmberUploader.Uploader', function(hooks) {
     assert.expect(1);
 
     let uploader = Uploader.extend({
-      url: '/upload',
-      file: file
+      url: '/upload'
     }).create();
 
     uploader.upload(file).then(function() {
@@ -107,8 +105,7 @@ module('EmberUploader.Uploader', function(hooks) {
     assert.expect(1);
 
     let uploader = Uploader.extend({
-      url: '/invalid',
-      file: file
+      url: '/invalid'
     }).create();
 
     uploader.upload(file).then(function() {
@@ -138,7 +135,6 @@ module('EmberUploader.Uploader', function(hooks) {
 
     let uploader = Uploader.extend({
       url: '/upload',
-      file: file,
       progressed: on('progress', function() {
         assert.ok(true, 'progress event was emitted');
         done();

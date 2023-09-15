@@ -140,7 +140,7 @@ export default class S3Uploader extends Uploader {
    * @return {object} The signing response
    */
   didSign(response) {
-    sendEvent(this, 'didSign', response);
+    sendEvent(this, 'didSign', [response]);
     return response;
   }
 }
