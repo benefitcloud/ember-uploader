@@ -205,7 +205,7 @@ export default class Uploader extends EmberObject {
   }
 
   formatResponse(xhr) {
-    let type = xhr.getResponseHeader('Content-Type');
+    let type = xhr.getResponseHeader('content-type');
 
     if (typeof type !== 'string') {
       return xhr;

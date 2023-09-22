@@ -82,7 +82,7 @@ export default class S3Uploader extends Uploader {
 
       xhr.open(method, url, true);
 
-      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader('content-type', 'application/json');
 
       if ('headers' in this.signingXhrSettings) {
         for (const [key, value] of Object.entries(this.signingXhrSettings.headers)) {
