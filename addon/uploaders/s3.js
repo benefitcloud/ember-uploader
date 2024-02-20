@@ -1,24 +1,19 @@
-import $ from 'jquery';
 import { Promise } from 'rsvp';
-import { set, get } from '@ember/object';
-import { run } from '@ember/runloop';
-import Uploader from 'ember-uploader/uploaders/uploader';
-import { assign } from '@ember/polyfills';
+import { sendEvent } from '@ember/object/events';
+import Uploader from './uploader';
 
-export default Uploader.extend({
+export default class S3Uploader extends Uploader {
   /**
    * Target url used to request a signed upload policy
    *
    * @property url
    */
-  signingUrl: '/sign',
 
   /**
    * request method for signing
    *
    * @property method
    */
-  signingMethod: 'GET',
 
   /**
    * Boolean property changed to true upon signing start and false upon
@@ -26,7 +21,13 @@ export default Uploader.extend({
    *
    * @property isSigning
    */
-  isSigning: false,
+  constructor() {
+    super(...arguments);
+    this.signingUrl = this.signingUrl || '/sign';
+    this.signingMethod = this.signingMethod || 'GET';
+    this.signingXhrSettings = this.signingXhrSettings || {};
+    this.isSigning = false;
+  }
 
   /**
    * Request signed upload policy and upload file(s) and any extra data
@@ -40,7 +41,7 @@ export default Uploader.extend({
     return this.sign(file, extra).then((json) => {
       let url;
 
-      set(this, 'isUploading', true);
+      this.isUploading = true;
 
       if (json.endpoint) {
         url = json.endpoint;
@@ -52,9 +53,9 @@ export default Uploader.extend({
         url = `https://${json.bucket}.s3.amazonaws.com`;
       }
 
-      return this.ajax(url, this.createFormData(file, json));
+      return this.makeRequest(url, this.createFormData(file, json));
     });
-  },
+  }
 
   /**
    * Request signed upload policy
@@ -65,40 +66,57 @@ export default Uploader.extend({
    * request object
    */
   sign(file, extra = {}) {
-    const url    = get(this, 'signingUrl');
-    const method = get(this, 'signingMethod');
-    const signingAjaxSettings = get(this, 'signingAjaxSettings');
+    let url    = this.signingUrl;
+    let method = this.signingMethod;
 
     extra.name = file.name;
     extra.type = file.type;
     extra.size = file.size;
 
-    const settings = assign(
-      {},
-      {
-        contentType: 'application/json',
-        dataType: 'json',
-        data: method.match(/get/i) ? extra : JSON.stringify(extra),
-        method,
-        url
-      },
-      signingAjaxSettings,
-    );
+    let data = method.match(/get/i) ? extra : JSON.stringify(extra);
 
-    set(this, 'isSigning', true);
+    this.isSigning = true;
 
     return new Promise((resolve, reject) => {
-      settings.success = (json) => {
-        run(null, resolve, this.didSign(json));
-      };
+      let xhr = new XMLHttpRequest();
 
-      settings.error = (jqXHR, responseText, errorThrown) => {
-        run(null, reject, this.didErrorOnSign(jqXHR, responseText, errorThrown));
-      };
+      xhr.open(method, url, true);
 
-      $.ajax(settings);
+      xhr.setRequestHeader('content-type', 'application/json');
+
+      if ('headers' in this.signingXhrSettings) {
+        for (const [key, value] of Object.entries(this.signingXhrSettings.headers)) {
+          xhr.setRequestHeader(key, value);
+        }
+      }
+
+      xhr.onload = () => {
+        let responseBody = this.formatResponse(xhr);
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(this.didSign(responseBody));
+        } else {
+          reject(this.didErrorOnSign({
+            status: xhr.status,
+            statusText: xhr.statusText,
+            responseBody
+          }));
+        }
+      }
+
+      xhr.onerror = () => {
+        let responseBody = this.formatResponse(xhr);
+
+        reject(this.didErrorOnSign({
+          status: xhr.status,
+          statusText: xhr.statusText,
+          responseBody
+        }));
+      }
+
+      xhr.send(data);
     });
-  },
+  }
 
   /**
    * Triggers didErrorOnSign event and sets isSigning to false
@@ -108,12 +126,12 @@ export default Uploader.extend({
    * @param {object} errorThrown The error caused
    * @return {object} Returns the jQuery XMLHttpRequest
    */
-  didErrorOnSign(jqXHR, textStatus, errorThrown) {
-    set(this, 'isSigning', false);
-    this.trigger('didErrorOnSign');
-    this.didError(jqXHR, textStatus, errorThrown);
-    return jqXHR;
-  },
+  didErrorOnSign(response) {
+    this.isSigning = false;
+    sendEvent(this, 'didErrorOnSign');
+    this.didError(response);
+    return response;
+  }
 
   /**
    * Triggers didSign event and returns the signing response
@@ -122,7 +140,7 @@ export default Uploader.extend({
    * @return {object} The signing response
    */
   didSign(response) {
-    this.trigger('didSign', response);
+    sendEvent(this, 'didSign', [response]);
     return response;
   }
-});
+}

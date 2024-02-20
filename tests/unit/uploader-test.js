@@ -1,11 +1,10 @@
 import { module } from 'qunit';
 import { setupTest } from 'ember-qunit';
-import { computed } from '@ember/object';
-import $ from 'jquery';
-import Uploader from 'ember-uploader/uploaders/uploader';
+import { on } from '@ember/object/evented';
 import test from 'ember-sinon-qunit/test-support/test';
-import TestableFormData from '../helpers/form-data';
 import { startMirage } from 'dummy/initializers/ember-cli-mirage';
+import TestableFormData from '../helpers/form-data';
+import Uploader from 'ember-uploader/uploaders/uploader';
 
 let file;
 
@@ -15,14 +14,7 @@ module('EmberUploader.Uploader', function(hooks) {
   hooks.beforeEach(function() {
     this.server = startMirage();
 
-    if (typeof WebKitBlobBuilder === "undefined") {
-      file = new Blob(['test'], { type: 'text/plain' });
-    } else {
-      const builder = new WebKitBlobBuilder();
-      builder.append('test');
-      file = builder.getBlob();
-    }
-
+    file = new Blob(['test'], { type: 'text/plain' });
     TestableFormData.inject();
   });
 
@@ -89,12 +81,10 @@ module('EmberUploader.Uploader', function(hooks) {
 
     let uploader = Uploader.extend({
       url: '/upload',
-      file: file
+      uploaded: on('didUpload', function() {
+        assert.ok(true);
+      }),
     }).create();
-
-    uploader.on('didUpload', function(data) {
-      assert.ok(true);
-    });
 
     uploader.upload(file);
   });
@@ -103,11 +93,10 @@ module('EmberUploader.Uploader', function(hooks) {
     assert.expect(1);
 
     let uploader = Uploader.extend({
-      url: '/upload',
-      file: file
+      url: '/upload'
     }).create();
 
-    uploader.upload(file).then(function(data) {
+    uploader.upload(file).then(function() {
       assert.ok(true);
     });
   });
@@ -116,12 +105,11 @@ module('EmberUploader.Uploader', function(hooks) {
     assert.expect(1);
 
     let uploader = Uploader.extend({
-      url: '/invalid',
-      file: file
+      url: '/invalid'
     }).create();
 
-    uploader.upload(file).then(function(data) {
-    }, function(data) {
+    uploader.upload(file).then(function() {
+    }, function() {
       assert.ok(true);
     });
   });
@@ -143,19 +131,20 @@ module('EmberUploader.Uploader', function(hooks) {
 
     server.timing = 100;
 
+    var done = assert.async();
+
     let uploader = Uploader.extend({
       url: '/upload',
-      file: file
+      progressed: on('progress', function() {
+        assert.ok(true, 'progress event was emitted');
+        done();
+      }),
     }).create();
 
-    uploader.on('progress', function(e) {
-      assert.ok(true, 'progress event was emitted');
-    });
-
-    await uploader.upload(file);
+    uploader.upload(file);
   });
 
-  test("it can receive extra data", function(assert) {
+  test("it can receive extra data", async function(assert) {
     assert.expect(1);
 
     let data = { test: 'valid' };
@@ -169,48 +158,5 @@ module('EmberUploader.Uploader', function(hooks) {
     }).create();
 
     uploader.upload(file, data);
-  });
-
-  test("it allows overriding ajax settings", function(assert) {
-    this.stub($, 'ajax');
-
-    assert.expect(1);
-
-    let uploader = Uploader.extend({
-      ajaxSettings: {
-        headers: {
-          'Content-Type': 'text/html'
-        }
-      }
-    }).create();
-
-    uploader.upload(file);
-
-    assert.equal($.ajax.getCall(0).args[0].headers['Content-Type'], 'text/html');
-  });
-
-  test("it allows ajaxSettings to be a computed property", function(assert) {
-    this.stub($, 'ajax');
-
-    assert.expect(2);
-
-    let uploader = Uploader.extend({
-      _testIterator: 0,
-
-      ajaxSettings: computed('_testIterator', function() {
-        return {
-          headers: {
-            'X-My-Incrementor': this.get('_testIterator'),
-          }
-        };
-      }),
-    }).create();
-
-    uploader.upload(file);
-    assert.equal($.ajax.getCall(0).args[0].headers['X-My-Incrementor'], '0');
-
-    uploader.set('_testIterator', 1);
-    uploader.upload(file);
-    assert.equal($.ajax.getCall(1).args[0].headers['X-My-Incrementor'], '1');
   });
 });
